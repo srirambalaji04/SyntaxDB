@@ -1,49 +1,49 @@
 package com.shiru.syntaxdb.fragment;
 
 import android.app.Activity;
-import android.net.Uri;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.shiru.syntaxdb.R;
+import com.shiru.syntaxdb.adapter.LanguageAdapter;
+import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.listener.ItemClickSupport;
+import com.shiru.syntaxdb.listener.ToolbarListener;
+import com.shiru.syntaxdb.utils.KEYS;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LanguagesFragment.OnFragmentInteractionListener} interface
+ * {@link com.shiru.syntaxdb.fragment.LanguagesFragment.LanguagesListener} interface
  * to handle interaction events.
  * Use the {@link LanguagesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LanguagesFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class LanguagesFragment extends Fragment implements ToolbarListener {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static final String TAG = "SDB.LanguagesFragment";
+    private List<Language> languages;
+    private LanguagesListener mListener;
+    private RecyclerView mRecyclerView;
 
-    private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LanguagesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LanguagesFragment newInstance(String param1, String param2) {
+    public static LanguagesFragment newInstance(List<Language> languages) {
         LanguagesFragment fragment = new LanguagesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelableArrayList(KEYS.KEY_LANGUAGE, (ArrayList<? extends Parcelable>) languages);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,36 +53,12 @@ public class LanguagesFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_languages, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            mListener = (LanguagesListener) context;
+        } else {
+            throw new RuntimeException("implement listener in the host activity");
         }
     }
 
@@ -92,19 +68,59 @@ public class LanguagesFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_languages, container, false);
+        findViewsById(view);
+        setAdapter();
+
+        Log.d(TAG, "onCreateView" + languages);
+        ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Language language = languages.get(position);
+                        mListener.onLanguageSelected(language);
+                    }
+                }, 200);
+            }
+        });
+        return view;
+    }
+
+    private void findViewsById(View view) {
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.lang_list);
+    }
+
+    private void setAdapter() {
+        languages = getArguments().getParcelableArrayList(KEYS.KEY_LANGUAGE);
+
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setAddDuration(1000);
+        mRecyclerView.setItemAnimator(animator);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LanguageAdapter adapter = new LanguageAdapter(languages);
+        mRecyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onNavigationClick(View view) {
+        getFragmentManager().popBackStack();
+    }
+
+    public interface LanguagesListener {
+        void onLanguageSelected(Language language);
     }
 
 }

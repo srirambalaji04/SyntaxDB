@@ -1,10 +1,84 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="10dp"
     tools:context="com.shiru.syntaxdb.fragment.ConceptFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/syntax_title_txt"
+            style="@style/AppTheme.TitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/cpt_heading_mrgn"
+            android:text="@string/syntax_title" />
+
+        <TextView
+            android:id="@+id/syntax_txt"
+            style="@style/AppTheme.ContentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/syntax_title_txt"
+            android:layout_margin="@dimen/cpt_heading_mrgn" />
+
+        <TextView
+            android:id="@+id/notes_title_txt"
+            style="@style/AppTheme.TitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/syntax_txt"
+            android:layout_margin="@dimen/cpt_heading_mrgn"
+            android:text="@string/notes_title" />
+
+        <TextView
+            android:id="@+id/notes_txt"
+            style="@style/AppTheme.ContentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notes_title_txt"
+            android:layout_margin="@dimen/cpt_heading_mrgn" />
+
+        <TextView
+            android:id="@+id/example_title_txt"
+            style="@style/AppTheme.TitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notes_txt"
+            android:layout_margin="@dimen/cpt_heading_mrgn"
+            android:text="@string/example_title" />
+
+        <TextView
+            android:id="@+id/example_txt"
+            style="@style/AppTheme.ContentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/example_title_txt"
+            android:layout_margin="@dimen/cpt_heading_mrgn" />
+
+
+        <!-- <android.support.v4.view.ViewPager
+             android:id="@+id/concept_pager"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_below="@+id/concept_title_txt"/>-->
+
+        <Button
+            android:id="@+id/save_offline_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/example_txt"
+            android:backgroundTintMode="src_atop"
+            android:drawableLeft="@drawable/save"
+            android:drawableTint="@android:color/black"
+            android:text="@string/save_offline" />
+
+    </RelativeLayout>
+
+</ScrollView>

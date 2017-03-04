@@ -1,10 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.shiru.syntaxdb.fragment.CategoriesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <!--<include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:title="fragment"
+        android:titleTextColor="@android:color/white"/>-->
+
+    <TextView
+        android:id="@+id/screen_title_txt"
+        style="@style/AppTheme.HeadingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/categories_heading" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cate_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/screen_title_txt"
+        android:layout_margin="5dp" />
+
+</RelativeLayout>

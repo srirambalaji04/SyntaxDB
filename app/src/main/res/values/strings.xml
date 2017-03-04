@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">SyntaxDB</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="concepts_heading">Concepts</string>
+    <string name="categories_heading">Categories</string>
+    <string name="syntax_title">Syntax</string>
+    <string name="notes_title">Notes</string>
+    <string name="example_title">Example</string>
+    <string name="languages_heading">Languages</string>
+    <string name="pls_wait">Please Wait!!!!</string>
+    <string name="save_offline">Save Offline</string>
 </resources>
