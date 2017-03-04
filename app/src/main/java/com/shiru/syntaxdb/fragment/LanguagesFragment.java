@@ -19,7 +19,6 @@ import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.LanguageAdapter;
 import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
-import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import java.util.List;
  * Use the {@link LanguagesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LanguagesFragment extends Fragment implements ToolbarListener {
+public class LanguagesFragment extends Fragment {
 
     public static final String TAG = "SDB.LanguagesFragment";
     private List<Language> languages;
@@ -112,11 +111,6 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
         LanguageAdapter adapter = new LanguageAdapter(languages);
         mRecyclerView.setAdapter(adapter);
 
-    }
-
-    @Override
-    public void onNavigationClick(View view) {
-        getFragmentManager().popBackStack();
     }
 
     public interface LanguagesListener {
