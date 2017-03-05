@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.bean.Concept;
+import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.utils.KEYS;
 
 /**
@@ -29,7 +31,6 @@ public class ConceptFragment extends Fragment {
     private TextView syntaxTxt;
     private TextView notesTxt;
     private TextView exampleTxt;
-
     private ConceptListener mListener;
 
 
@@ -57,14 +58,14 @@ public class ConceptFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_concept, container, false);
         findViewsById(view);
-        Concept concept = getArguments().getParcelable(KEYS.KEY_CONCEPT);
+        final Concept concept = getArguments().getParcelable(KEYS.KEY_CONCEPT);
         setConcept(concept);
 
-        Button saveBtn = (Button) view.findViewById(R.id.save_offline_btn);
+        final Button saveBtn = (Button) view.findViewById(R.id.save_offline_btn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                saveOffline(concept);
             }
         });
         return view;
@@ -93,6 +94,14 @@ public class ConceptFragment extends Fragment {
         mListener = null;
     }
 
+    private void saveOffline(Concept concept){
+        DatabaseDao dao = new DatabaseDao(getContext());
+        if (dao.insertConcept(concept)){
+            Toast.makeText(getContext(), "Saved Concept" +  concept.getName() +"to offline", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getContext(), "Failed to save offline", Toast.LENGTH_SHORT).show();
+        }
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
