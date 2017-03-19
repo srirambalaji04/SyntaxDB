@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -83,13 +84,14 @@ public class LanguagesFragment extends Fragment {
         Log.d(TAG, "onCreateView" + languages);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
-            public void onItemClicked(RecyclerView recyclerView, final int position, View v) {
+            public void onItemClicked(final RecyclerView recyclerView, final int position, final View v) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Language language = languages.get(position);
                         mListener.onLanguageSelected(language);
+
                     }
                 }, 200);
             }

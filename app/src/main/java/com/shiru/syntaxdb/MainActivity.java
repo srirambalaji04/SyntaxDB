@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         LanguagesRsp rsp = getIntent().getParcelableExtra(KEYS.KEY_LANGUAGE);
 
         getSupportFragmentManager().beginTransaction()
