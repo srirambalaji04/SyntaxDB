@@ -11,18 +11,17 @@
         android:title="fragment"
         android:titleTextColor="@android:color/white"/>-->
 
-    <TextView
+    <!--<TextView
         android:id="@+id/screen_title_txt"
         style="@style/AppTheme.HeadingTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/categories_heading" />
+        android:text="@string/categories_heading" />-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cate_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/screen_title_txt"
         android:layout_margin="5dp" />
 
 </RelativeLayout>

@@ -4,17 +4,16 @@
     android:layout_height="match_parent"
     tools:context="com.shiru.syntaxdb.fragment.ConceptsFragment">
 
-    <TextView
-        android:id="@+id/heading_txt"
-        style="@style/AppTheme.HeadingTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/concepts_heading" />
+    <!--    <TextView
+            android:id="@+id/heading_txt"
+            style="@style/AppTheme.HeadingTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/concepts_heading" />-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/concepts_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/heading_txt" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

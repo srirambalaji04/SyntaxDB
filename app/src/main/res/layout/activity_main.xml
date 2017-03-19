@@ -9,11 +9,26 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <HorizontalScrollView
+        android:id="@+id/scroll_tray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:id="@+id/headings_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/cpt_heading_mrgn" />
+
+    </HorizontalScrollView>
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/scroll_tray" />
 
 </RelativeLayout>
 

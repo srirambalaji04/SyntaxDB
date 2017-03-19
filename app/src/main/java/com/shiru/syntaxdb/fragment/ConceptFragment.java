@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.bean.Concept;
-import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.utils.KEYS;
 
 /**
@@ -95,12 +94,13 @@ public class ConceptFragment extends Fragment {
     }
 
     private void saveOffline(Concept concept){
-        DatabaseDao dao = new DatabaseDao(getContext());
+        Toast.makeText(getContext(), "Coming soon", Toast.LENGTH_SHORT).show();
+        /*DatabaseDao dao = new DatabaseDao(getContext());
         if (dao.insertConcept(concept)){
             Toast.makeText(getContext(), "Saved Concept" +  concept.getName() +"to offline", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(getContext(), "Failed to save offline", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
     /**
      * This interface must be implemented by activities that contain this

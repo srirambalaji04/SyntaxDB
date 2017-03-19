@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:layout_margin="@dimen/cpt_heading_mrgn"
+    android:drawableRight="@drawable/ic_arrow_right"
+    android:textSize="@dimen/heading_txt_size"
+    android:textColor="@android:color/white" />
