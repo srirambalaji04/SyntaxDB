@@ -97,14 +97,14 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         View view = getLayoutInflater().inflate(R.layout.text1, null, false);
         TextView title = (TextView) view.findViewById(R.id.content);
         title.setText(text);
-        title.setTag(tag);
+        view.setTag(tag);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fm.popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                for (int count = 0; count <= container.getChildCount(); count++) {
-                    if (container.getChildCount() > fm.getBackStackEntryCount()) {
-                        container.removeViewAt(container.getChildCount());
+                for (int count = 1; count <= container.getChildCount(); count++) {
+                    if (count > fm.getBackStackEntryCount() + 1) {
+                        container.removeViewAt(count);
                     }
                 }
 
@@ -112,14 +112,18 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         });
         return view;
     }
+
+    private void checkAndRemoveView(String tag){
+        View view = container.findViewWithTag(tag);
+        if (view != null){
+            container.removeView(view);
+        }
+    }
+
     @Override
     public void onLanguageSelected(Language language) {
         if (container.getChildCount() > 0) {
             container.removeAllViews();
-        }
-        View view = container.findViewWithTag(CategoriesFragment.TAG);
-        if (view != null) {
-            container.removeView(view);
         }
         container.addView(getView(language.getName(), CategoriesFragment.TAG));
         CategoriesFragment fragment = CategoriesFragment.newInstance(language);
@@ -128,10 +132,7 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
 
     @Override
     public void onCategorySelected(Language language, Category category) {
-        View view = container.findViewWithTag(ConceptsFragment.TAG);
-        if (view != null) {
-            container.removeView(view);
-        }
+        checkAndRemoveView(ConceptsFragment.TAG);
         container.addView(getView(category.getName(), ConceptsFragment.TAG));
         ConceptsFragment fragment = ConceptsFragment.newInstance(category);
         addFragment(fragment, ConceptsFragment.TAG, true, false, true);
@@ -139,10 +140,7 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
 
     @Override
     public void onConceptSelected(Concept concept) {
-        View view = container.findViewWithTag(ConceptFragment.TAG);
-        if (view != null) {
-            container.removeView(view);
-        }
+        checkAndRemoveView(ConceptFragment.TAG);
         container.addView(getView(concept.getName(), ConceptFragment.TAG));
         ConceptFragment fragment = ConceptFragment.newInstance(concept);
         addFragment(fragment, ConceptFragment.TAG, true, false, true);
