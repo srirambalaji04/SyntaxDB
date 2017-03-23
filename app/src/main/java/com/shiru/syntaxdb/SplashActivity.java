@@ -15,7 +15,7 @@ import com.shiru.syntaxdb.api.request.GetLanguagesRequest;
 import com.shiru.syntaxdb.api.response.bean.LanguagesRsp;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
-import com.shiru.syntaxdb.utils.UIUtility;
+import com.shiru.syntaxdb.utils.UiUtility;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 //        showAnim();
-        dialog = UIUtility.getDialog(this);
+        dialog = UiUtility.getDialog(this);
         dialog.show();
         sendRequest();
     }

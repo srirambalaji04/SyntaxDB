@@ -25,7 +25,7 @@ import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
-import com.shiru.syntaxdb.utils.UIUtility;
+import com.shiru.syntaxdb.utils.UiUtility;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public class ConceptsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         manager.start(getContext());
-        dialog = UIUtility.getDialog(getContext());
+        dialog = UiUtility.getDialog(getContext());
         dialog.show();
     }
 

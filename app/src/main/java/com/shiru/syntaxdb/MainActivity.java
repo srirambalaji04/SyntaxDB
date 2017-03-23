@@ -92,22 +92,21 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         }
     }
 
-    private View getView(String text, final String tag) {
+    private View getView(final String text) {
         final FragmentManager fm = getSupportFragmentManager();
         View view = getLayoutInflater().inflate(R.layout.text1, null, false);
         TextView title = (TextView) view.findViewById(R.id.content);
         title.setText(text);
-        view.setTag(tag);
+        view.setTag(text);
         title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fm.popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                for (int count = 1; count <= container.getChildCount(); count++) {
+                fm.popBackStack(text, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                for (int count = container.getChildCount(); count == 1; count--) {
                     if (count > fm.getBackStackEntryCount() + 1) {
                         container.removeViewAt(count);
                     }
                 }
-
             }
         });
         return view;
@@ -125,24 +124,24 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         if (container.getChildCount() > 0) {
             container.removeAllViews();
         }
-        container.addView(getView(language.getName(), CategoriesFragment.TAG));
+        container.addView(getView(language.getName()));
         CategoriesFragment fragment = CategoriesFragment.newInstance(language);
-        addFragment(fragment, CategoriesFragment.TAG, true, false, true);
+        addFragment(fragment, language.getName(), true, false, true);
     }
 
     @Override
     public void onCategorySelected(Language language, Category category) {
         checkAndRemoveView(ConceptsFragment.TAG);
-        container.addView(getView(category.getName(), ConceptsFragment.TAG));
+        container.addView(getView(category.getName()));
         ConceptsFragment fragment = ConceptsFragment.newInstance(category);
-        addFragment(fragment, ConceptsFragment.TAG, true, false, true);
+        addFragment(fragment, category.getName(), true, false, true);
     }
 
     @Override
     public void onConceptSelected(Concept concept) {
         checkAndRemoveView(ConceptFragment.TAG);
-        container.addView(getView(concept.getName(), ConceptFragment.TAG));
+        container.addView(getView(concept.getName()));
         ConceptFragment fragment = ConceptFragment.newInstance(concept);
-        addFragment(fragment, ConceptFragment.TAG, true, false, true);
+        addFragment(fragment, concept.getName(), true, false, true);
     }
 }

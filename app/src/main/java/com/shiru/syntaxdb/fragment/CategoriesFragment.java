@@ -26,7 +26,7 @@ import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
-import com.shiru.syntaxdb.utils.UIUtility;
+import com.shiru.syntaxdb.utils.UiUtility;
 
 import java.util.List;
 
@@ -73,7 +73,7 @@ public class CategoriesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         spiceManager.start(getContext());
-        dialog = UIUtility.getDialog(getContext());
+        dialog = UiUtility.getDialog(getContext());
         dialog.show();
     }
 

@@ -10,7 +10,7 @@ import com.shiru.syntaxdb.R;
 /**
  * Created by shiru on 2/19/2017.
  */
-public class UIUtility {
+public class UiUtility {
 
     public static AlertDialog getDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
