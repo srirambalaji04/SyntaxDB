@@ -64,7 +64,12 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-
+                int count = getSupportFragmentManager().getBackStackEntryCount() + 1;
+                for (int i = container.getChildCount(); i == count; i--) {
+                    if (container.getChildCount() > count) {
+                        container.removeViewAt(container.getChildCount());
+                    }
+                }
             }
         });
     }
