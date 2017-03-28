@@ -65,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
             @Override
             public void onBackStackChanged() {
                 int count = getSupportFragmentManager().getBackStackEntryCount() + 1;
-                for (int i = container.getChildCount(); i == count; i--) {
+                for (int i = container.getChildCount(); i == 1; i--) {
+                    Log.d(TAG, "comein");
                     if (container.getChildCount() > count) {
+                        Log.d(TAG, "camein");
                         container.removeViewAt(container.getChildCount());
                     }
                 }
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         TextView title = (TextView) view.findViewById(R.id.content);
         title.setText(text);
         view.setTag(text);
-        title.setOnClickListener(new View.OnClickListener() {
+       /* title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fm.popBackStack(text, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
                     }
                 }
             }
-        });
+        });*/
         return view;
     }
 
