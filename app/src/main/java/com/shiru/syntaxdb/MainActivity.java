@@ -64,26 +64,14 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                if (getSupportFragmentManager().getBackStackEntryCount() > 0){
-                    String text = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
-                    Log.d(TAG, "null");
-                    for (int i = container.getChildCount(); i == 0; i--){
-                        if (container.findViewWithTag(text)!= null){
-                            container.removeView(container.findViewWithTag(text));
-                            Log.d(TAG, "removed");
-                        }else{
-                            container.addView(getView(text));
-                            Log.d(TAG, "removed added");
-                        }
-                    }
-                }
-
-                /*int count = getSupportFragmentManager().getBackStackEntryCount() + 1;
-                for (int i = container.getChildCount(); i == count; i--) {
+                int count = getSupportFragmentManager().getBackStackEntryCount() + 1;
+                for (int i = container.getChildCount(); i == 1; i--) {
+                    Log.d(TAG, "comein");
                     if (container.getChildCount() > count) {
+                        Log.d(TAG, "camein");
                         container.removeViewAt(container.getChildCount());
                     }
-                }*/
+                }
             }
         });
     }
@@ -117,12 +105,12 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         TextView title = (TextView) view.findViewById(R.id.content);
         title.setText(text);
         view.setTag(text);
-        /*title.setOnClickListener(new View.OnClickListener() {
+       /* title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fm.popBackStack(text, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                for (int count = container.getChildCount(); count == 0; count--) {
-                    if (count > fm.getFragments().size()) {
+                for (int count = container.getChildCount(); count == 1; count--) {
+                    if (count > fm.getBackStackEntryCount() + 1) {
                         container.removeViewAt(count);
                     }
                 }
@@ -131,12 +119,10 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         return view;
     }
 
-    private void checkAndRemoveView(){
-        int count = getSupportFragmentManager().getFragments().size();
-        for (int i = container.getChildCount(); i == count; i--){
-            if (i > count){
-                container.removeViewAt(i);
-            }
+    private void checkAndRemoveView(String tag){
+        View view = container.findViewWithTag(tag);
+        if (view != null){
+            container.removeView(view);
         }
     }
 
@@ -145,23 +131,23 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         if (container.getChildCount() > 0) {
             container.removeAllViews();
         }
-//        container.addView(getView(language.getName()));
+        container.addView(getView(language.getName()));
         CategoriesFragment fragment = CategoriesFragment.newInstance(language);
         addFragment(fragment, language.getName(), true, false, true);
     }
 
     @Override
     public void onCategorySelected(Language language, Category category) {
-        /*checkAndRemoveView();
-        container.addView(getView(category.getName()));*/
+        checkAndRemoveView(ConceptsFragment.TAG);
+        container.addView(getView(category.getName()));
         ConceptsFragment fragment = ConceptsFragment.newInstance(category);
         addFragment(fragment, category.getName(), true, false, true);
     }
 
     @Override
     public void onConceptSelected(Concept concept) {
-        /*checkAndRemoveView();
-        container.addView(getView(concept.getName()));*/
+        checkAndRemoveView(ConceptFragment.TAG);
+        container.addView(getView(concept.getName()));
         ConceptFragment fragment = ConceptFragment.newInstance(concept);
         addFragment(fragment, concept.getName(), true, false, true);
     }
