@@ -3,18 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:padding="10dp"
     tools:context="com.shiru.syntaxdb.fragment.ConceptFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/heading_txt"
+            style="@style/AppTheme.ContentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/syntax_title_txt"
             style="@style/AppTheme.TitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/heading_txt"
             android:layout_margin="@dimen/cpt_heading_mrgn"
             android:text="@string/syntax_title" />
 

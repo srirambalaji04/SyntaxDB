@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.octo.android.robospice.SpiceManager;
@@ -56,7 +57,6 @@ public class ConceptsFragment extends Fragment {
      *
      * @return A new instance of fragment ConceptsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ConceptsFragment newInstance(Category category) {
         ConceptsFragment fragment = new ConceptsFragment();
         Bundle args = new Bundle();
@@ -68,9 +68,6 @@ public class ConceptsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        manager.start(getContext());
-        dialog = UiUtility.getDialog(getContext());
-        dialog.show();
     }
 
     @Override
@@ -78,8 +75,19 @@ public class ConceptsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_concepts, container, false);
         findViewsById(view);
+
+        if (getArguments().containsKey(KEYS.KEY_CATEGORY))
+            setTitle(view, (Category) getArguments().getParcelable(KEYS.KEY_CATEGORY));
         sendRequest();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        manager.start(getContext());
+        dialog = UiUtility.getDialog(getContext());
+        dialog.show();
     }
 
     @Override
@@ -111,6 +119,11 @@ public class ConceptsFragment extends Fragment {
                 }, 200);
             }
         });
+    }
+
+    private void setTitle(View view, Category category) {
+        TextView title = (TextView) view.findViewById(R.id.heading_txt);
+        title.setText(category.getLanguagelink() + " | " + category.getName());
     }
 
     private void sendRequest() {

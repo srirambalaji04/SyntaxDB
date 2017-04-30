@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -72,9 +73,6 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        spiceManager.start(getContext());
-        dialog = UiUtility.getDialog(getContext());
-        dialog.show();
     }
 
     @Override
@@ -83,6 +81,9 @@ public class CategoriesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
         findViewsById(view);
+
+        if (getArguments().containsKey(KEYS.KEY_LANGUAGE))
+            setTitle(view, (Language) getArguments().getParcelable(KEYS.KEY_LANGUAGE));
         sendRequest();
         return view;
     }
@@ -96,6 +97,14 @@ public class CategoriesFragment extends Fragment {
         GetCategoriesRequest request = new GetCategoriesRequest(language);
         CategoriesListener listener = new CategoriesListener();
         spiceManager.execute(request, listener);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        spiceManager.start(getContext());
+        dialog = UiUtility.getDialog(getContext());
+        dialog.show();
     }
 
     @Override
@@ -125,6 +134,11 @@ public class CategoriesFragment extends Fragment {
 
             }
         });
+    }
+
+    private void setTitle(View view, Language selectedLanguage) {
+        TextView title = (TextView) view.findViewById(R.id.screen_title_txt);
+        title.setText(selectedLanguage.getName());
     }
 
     public interface CategoryListener {

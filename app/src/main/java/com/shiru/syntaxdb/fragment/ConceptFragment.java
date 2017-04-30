@@ -30,6 +30,7 @@ public class ConceptFragment extends Fragment {
     private TextView syntaxTxt;
     private TextView notesTxt;
     private TextView exampleTxt;
+    private TextView headingTitle;
     private ConceptListener mListener;
 
 
@@ -74,12 +75,14 @@ public class ConceptFragment extends Fragment {
         syntaxTxt = (TextView) view.findViewById(R.id.syntax_txt);
         notesTxt = (TextView) view.findViewById(R.id.notes_txt);
         exampleTxt = (TextView) view.findViewById(R.id.example_txt);
+        headingTitle = (TextView) view.findViewById(R.id.heading_txt);
     }
 
     private void setConcept(Concept concept) {
         syntaxTxt.setText(concept.getSyntax());
         notesTxt.setText(concept.getNotes());
         exampleTxt.setText(concept.getExample());
+        headingTitle.setText(concept.getLanguageLink() + " | " + concept.getName());
     }
 
     @Override
@@ -93,7 +96,7 @@ public class ConceptFragment extends Fragment {
         mListener = null;
     }
 
-    private void saveOffline(Concept concept){
+    private void saveOffline(Concept concept) {
         Toast.makeText(getContext(), "Coming soon", Toast.LENGTH_SHORT).show();
         /*DatabaseDao dao = new DatabaseDao(getContext());
         if (dao.insertConcept(concept)){
@@ -102,6 +105,7 @@ public class ConceptFragment extends Fragment {
             Toast.makeText(getContext(), "Failed to save offline", Toast.LENGTH_SHORT).show();
         }*/
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
