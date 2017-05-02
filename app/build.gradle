@@ -16,12 +16,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "DATABASE", "\"SyntaxDB\"");
-            buildConfigField("int", "DB_VERSION", "\"1\"");
             buildConfigField("String", "TABLE_CONCEPTS", "\"Concepts\"");
         }
         debug {
             buildConfigField("String", "DATABASE", "\"SyntaxDB\"");
-            buildConfigField("int", "DB_VERSION", "1");
             buildConfigField("String", "TABLE_CONCEPTS", "\"Concepts\"");
         }
     }
