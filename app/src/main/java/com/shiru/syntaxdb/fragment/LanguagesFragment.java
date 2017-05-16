@@ -2,12 +2,12 @@ package com.shiru.syntaxdb.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +19,11 @@ import android.view.ViewGroup;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.LanguageAdapter;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.databinding.FragmentLanguagesBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
+import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
+import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +36,10 @@ import java.util.List;
  * Use the {@link LanguagesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LanguagesFragment extends Fragment {
+public class LanguagesFragment extends Fragment implements ToolbarListener {
 
     public static final String TAG = "SDB.LanguagesFragment";
+    private FragmentLanguagesBinding binding;
     private List<Language> languages;
     private LanguagesListener mListener;
     private RecyclerView mRecyclerView;
@@ -76,9 +80,9 @@ public class LanguagesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_languages, container, false);
-        findViewsById(view);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_languages, container, false);
+        findViewsById();
+        setupToolbar();
         setAdapter();
 
         Log.d(TAG, "onCreateView" + languages);
@@ -96,11 +100,15 @@ public class LanguagesFragment extends Fragment {
                 }, 200);
             }
         });
-        return view;
+        return binding.getRoot();
     }
 
-    private void findViewsById(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.lang_list);
+    private void findViewsById() {
+        mRecyclerView = binding.langList;
+    }
+
+    private void setupToolbar() {
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_menu, this);
     }
 
     private void setAdapter() {
@@ -115,8 +123,15 @@ public class LanguagesFragment extends Fragment {
 
     }
 
+    @Override
+    public void onNavigationClick(View view) {
+        mListener.onNavigationClicked();
+    }
+
     public interface LanguagesListener {
         void onLanguageSelected(Language language);
+
+        void onNavigationClicked();
     }
 
 }

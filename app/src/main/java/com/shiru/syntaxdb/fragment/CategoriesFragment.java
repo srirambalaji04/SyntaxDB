@@ -2,6 +2,7 @@ package com.shiru.syntaxdb.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -24,10 +24,13 @@ import com.shiru.syntaxdb.api.request.GetCategoriesRequest;
 import com.shiru.syntaxdb.api.response.bean.CategoriesRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.databinding.FragmentCategoriesBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
+import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.utils.UiUtility;
+import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.List;
 
@@ -39,9 +42,11 @@ import java.util.List;
  * Use the {@link CategoriesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements ToolbarListener {
 
     public static final String TAG = "SDB.CategoriesFragment";
+
+    private FragmentCategoriesBinding binding;
     private RecyclerView cateList;
     private SpiceManager spiceManager = new SpiceManager(SDBService.class);
     private AlertDialog dialog;
@@ -78,14 +83,14 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_categories, container, false);
-        findViewsById(view);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_categories, container, false);
+        findViewsById(binding.getRoot());
+        setupToolbar();
 
         if (getArguments().containsKey(KEYS.KEY_LANGUAGE))
-            setTitle(view, (Language) getArguments().getParcelable(KEYS.KEY_LANGUAGE));
+            setTitle((Language) getArguments().getParcelable(KEYS.KEY_LANGUAGE));
         sendRequest();
-        return view;
+        return binding.getRoot();
     }
 
     private void findViewsById(View view) {
@@ -136,9 +141,17 @@ public class CategoriesFragment extends Fragment {
         });
     }
 
-    private void setTitle(View view, Language selectedLanguage) {
-        TextView title = (TextView) view.findViewById(R.id.screen_title_txt);
-        title.setText(selectedLanguage.getName());
+    private void setupToolbar() {
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this);
+    }
+
+    private void setTitle(Language selectedLanguage) {
+        binding.setTitle(selectedLanguage.getName());
+    }
+
+    @Override
+    public void onNavigationClick(View view) {
+        getFragmentManager().popBackStack();
     }
 
     public interface CategoryListener {

@@ -1,22 +1,36 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.shiru.syntaxdb.fragment.CategoriesFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/screen_title_txt"
-        style="@style/AppTheme.ContentTextView"
+    <data>
+
+        <variable
+            name="title"
+            type="String" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:textColor="@android:color/white" />
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cate_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/screen_title_txt"
-        android:layout_margin="5dp" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/screen_title_txt"
+            style="@style/AppTheme.ContentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:background="@color/colorPrimary"
+            android:text="@{title}"
+            android:textColor="@android:color/white" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cate_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/screen_title_txt"
+            android:layout_margin="5dp" />
+
+    </RelativeLayout>
+</layout>

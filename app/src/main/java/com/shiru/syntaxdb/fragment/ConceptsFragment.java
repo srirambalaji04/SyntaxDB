@@ -1,6 +1,7 @@
 package com.shiru.syntaxdb.fragment;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.octo.android.robospice.SpiceManager;
@@ -23,10 +23,13 @@ import com.shiru.syntaxdb.api.request.GetConceptsRequest;
 import com.shiru.syntaxdb.api.response.bean.ConceptsRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Concept;
+import com.shiru.syntaxdb.databinding.FragmentConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
+import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.utils.UiUtility;
+import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.List;
 
@@ -38,10 +41,11 @@ import java.util.List;
  * Use the {@link ConceptsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConceptsFragment extends Fragment {
+public class ConceptsFragment extends Fragment implements ToolbarListener {
 
     public static final String TAG = "SDB.ConceptsFragment";
 
+    private FragmentConceptsBinding binding;
     private RecyclerView mRecyclerView;
     private SpiceManager manager = new SpiceManager(SDBService.class);
     private ConceptsInteractionListener mListener;
@@ -73,13 +77,13 @@ public class ConceptsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_concepts, container, false);
-        findViewsById(view);
-
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_concepts, container, false);
+        findViewsById(binding.getRoot());
+        setupToolbar();
         if (getArguments().containsKey(KEYS.KEY_CATEGORY))
-            setTitle(view, (Category) getArguments().getParcelable(KEYS.KEY_CATEGORY));
+            setTitle((Category) getArguments().getParcelable(KEYS.KEY_CATEGORY));
         sendRequest();
-        return view;
+        return binding.getRoot();
     }
 
     @Override
@@ -121,9 +125,12 @@ public class ConceptsFragment extends Fragment {
         });
     }
 
-    private void setTitle(View view, Category category) {
-        TextView title = (TextView) view.findViewById(R.id.heading_txt);
-        title.setText(category.getLanguagelink() + " | " + category.getName());
+    private void setupToolbar() {
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this);
+    }
+
+    private void setTitle(Category category) {
+        binding.setTitle(category.getLanguagelink() + " | " + category.getName());
     }
 
     private void sendRequest() {
@@ -150,6 +157,11 @@ public class ConceptsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onNavigationClick(View view) {
+        getFragmentManager().popBackStack();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -161,8 +173,7 @@ public class ConceptsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface ConceptsInteractionListener {
-        // TODO: Update argument type and name
-        public void onConceptSelected(Concept concept);
+        void onConceptSelected(Concept concept);
     }
 
     private class ConceptsRequestListener implements RequestListener<ConceptsRsp> {

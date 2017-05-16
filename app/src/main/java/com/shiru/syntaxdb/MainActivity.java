@@ -1,20 +1,22 @@
 package com.shiru.syntaxdb;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.shiru.syntaxdb.api.response.bean.LanguagesRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.databinding.ActivityMainBinding;
 import com.shiru.syntaxdb.fragment.CategoriesFragment;
 import com.shiru.syntaxdb.fragment.ConceptFragment;
 import com.shiru.syntaxdb.fragment.ConceptsFragment;
@@ -26,57 +28,41 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
 
     public static final String TAG = "SDB.MainActivity";
 
-    private Toolbar mToolbar;
-    private ViewGroup container;
+    private ActivityMainBinding binding;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        findViewsById();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         LanguagesRsp rsp = getIntent().getParcelableExtra(KEYS.KEY_LANGUAGE);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, LanguagesFragment.newInstance(rsp.getLanguages()), LanguagesFragment.TAG)
                 .commit();
-        handleToolbar();
+        setupNavigationView();
     }
 
-    private void findViewsById() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        container = (ViewGroup) findViewById(R.id.headings_container);
+    private void setupNavigationView() {
+        toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        };
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
-    private void handleToolbar() {
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-                int count = fm.getBackStackEntryCount();
-                if (count == 0) {
-                    MainActivity.this.finish();
-                } else {
-                    fm.popBackStack();
-                }
-            }
-        });
-        mToolbar.setNavigationIcon(R.mipmap.ic_launcher);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-/*        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                FragmentManager fm = getSupportFragmentManager();
-                int count = fm.getBackStackEntryCount() - 1;
-                Log.d(TAG, "called" + count);
-                String tag = getSupportFragmentManager().getBackStackEntryAt(count).getName();
-                View view = container.findViewWithTag(tag);
-                if (view == null) {
-                    container.addView(getView(tag));
-                } else {
-                    container.removeView(view);
-                }
-            }
-        });*/
+        return super.onOptionsItemSelected(item);
     }
 
     public void addFragment(Fragment fragment, String tag, boolean addtoBackStack, boolean clearBackStack, boolean hideCurrent) {
@@ -102,18 +88,16 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         }
     }
 
-    private View getView(final String text) {
-        View view = getLayoutInflater().inflate(R.layout.text1, null, false);
-        TextView title = (TextView) view.findViewById(R.id.content);
-        title.setText(text);
-        view.setTag(text);
-        return view;
-    }
-
+    ////////////////////////////////////  I N T E R F A C E     L I  S T E N E R S \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     @Override
     public void onLanguageSelected(Language language) {
         CategoriesFragment fragment = CategoriesFragment.newInstance(language);
         addFragment(fragment, language.getName(), true, false, true);
+    }
+
+    @Override
+    public void onNavigationClicked() {
+        binding.drawerLayout.openDrawer(Gravity.START);
     }
 
     @Override
