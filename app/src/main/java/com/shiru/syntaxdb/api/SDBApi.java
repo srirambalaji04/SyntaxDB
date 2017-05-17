@@ -14,4 +14,6 @@ public class SDBApi {
     public static final String GET_LANG_CATEGORIES_URL = GET_SINGLE_LANG_URL + "categories/";
 
     public static final String GET_CATE_CONCEPTS_URL = GET_LANG_CATEGORIES_URL + "%s" + "/concepts";
+
+    public static final String GET_ALL_SEARCHES_URL = String.format("%s%s", SERVER_BASE_URL, "concepts/search?");
 }

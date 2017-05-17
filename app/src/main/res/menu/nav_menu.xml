@@ -7,7 +7,7 @@
         android:checkableBehavior="none"
         android:enabled="true">
         <item
-            android:id="@+id/Recents"
+            android:id="@+id/recents"
             android:icon="@drawable/ic_recents"
             android:orderInCategory="100"
             android:title="@string/recents"
@@ -15,7 +15,7 @@
             app:showAsAction="never" />
 
         <item
-            android:id="@+id/about"
+            android:id="@+id/search"
             android:icon="@drawable/ic_search"
             android:orderInCategory="101"
             android:title="@string/search"

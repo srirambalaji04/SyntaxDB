@@ -2,6 +2,8 @@ package com.shiru.syntaxdb;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,10 +23,11 @@ import com.shiru.syntaxdb.fragment.CategoriesFragment;
 import com.shiru.syntaxdb.fragment.ConceptFragment;
 import com.shiru.syntaxdb.fragment.ConceptsFragment;
 import com.shiru.syntaxdb.fragment.LanguagesFragment;
+import com.shiru.syntaxdb.fragment.SearchConceptsFragment;
 import com.shiru.syntaxdb.utils.KEYS;
 
 public class MainActivity extends AppCompatActivity implements LanguagesFragment.LanguagesListener, CategoriesFragment.CategoryListener,
-        ConceptsFragment.ConceptsInteractionListener {
+        ConceptsFragment.ConceptsInteractionListener, SearchConceptsFragment.SearchFragmentListener {
 
     public static final String TAG = "SDB.MainActivity";
 
@@ -57,12 +60,23 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         };
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
+        binding.navigationMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.recents:
+                        break;
+                    case R.id.search:
+                        SearchConceptsFragment fragment = SearchConceptsFragment.newInstance();
+                        addFragment(fragment, SearchConceptsFragment.TAG, true, false, true);
+                        if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
+                            binding.drawerLayout.closeDrawer(Gravity.START);
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     public void addFragment(Fragment fragment, String tag, boolean addtoBackStack, boolean clearBackStack, boolean hideCurrent) {
@@ -110,5 +124,10 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
     public void onConceptSelected(Concept concept) {
         ConceptFragment fragment = ConceptFragment.newInstance(concept);
         addFragment(fragment, concept.getName(), true, false, true);
+    }
+
+    @Override
+    public void onConceptSelcted(Concept concept) {
+        onConceptSelected(concept);
     }
 }
