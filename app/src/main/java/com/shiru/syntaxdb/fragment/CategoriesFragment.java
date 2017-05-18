@@ -27,6 +27,7 @@ import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.databinding.FragmentCategoriesBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
+import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.utils.UiUtility;
@@ -161,8 +162,9 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
     private class CategoriesListener implements RequestListener<CategoriesRsp> {
 
         @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            Log.e(TAG, "onRequestFailure" + spiceException.getCause().toString());
+        public void onRequestFailure(SpiceException e) {
+            Log.e(TAG, "onRequestFailure" + e.toString());
+            ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
             if (dialog.isShowing())
                 dialog.dismiss();
         }

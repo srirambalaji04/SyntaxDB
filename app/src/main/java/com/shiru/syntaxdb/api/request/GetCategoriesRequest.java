@@ -10,6 +10,7 @@ import com.shiru.syntaxdb.api.SDBApi;
 import com.shiru.syntaxdb.api.response.bean.CategoriesRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.squareup.okhttp.Response;
 
 import java.util.Arrays;
@@ -35,9 +36,9 @@ public class GetCategoriesRequest extends SpiceRequest<CategoriesRsp> {
         Response response = RequestUtility.sendApiRequest(url, RequestUtility.HTTPMETHOD.GET, null);
 
         if (!response.isSuccessful()) {
+            ExceptionHandler.handleRequestException(response);
             Log.d(TAG, "LOADDATAFROMNETWORK" + response.body().string());
         }
-
         String jsonRsp = response.body().string();
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

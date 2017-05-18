@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -26,6 +25,7 @@ import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.databinding.FragmentConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
+import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.utils.UiUtility;
@@ -179,9 +179,8 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
     private class ConceptsRequestListener implements RequestListener<ConceptsRsp> {
 
         @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            Toast.makeText(ConceptsFragment.this.getContext(),
-                    (CharSequence) spiceException.getCause(), Toast.LENGTH_LONG).show();
+        public void onRequestFailure(SpiceException e) {
+            ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
             if (dialog.isShowing())
                 dialog.dismiss();
         }

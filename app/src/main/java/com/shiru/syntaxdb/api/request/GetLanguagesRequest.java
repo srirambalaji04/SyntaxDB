@@ -9,6 +9,7 @@ import com.shiru.syntaxdb.api.RequestUtility;
 import com.shiru.syntaxdb.api.SDBApi;
 import com.shiru.syntaxdb.api.response.bean.LanguagesRsp;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.squareup.okhttp.Response;
 
 import java.util.Arrays;
@@ -30,7 +31,8 @@ public class GetLanguagesRequest extends SpiceRequest<LanguagesRsp> {
 
         Response response = RequestUtility.sendApiRequest(url, RequestUtility.HTTPMETHOD.GET, null);
 
-        if (response.code() > 400) {
+        if (!response.isSuccessful()) {
+            ExceptionHandler.handleRequestException(response);
             Log.e(TAG, response.body().string());
         }
 

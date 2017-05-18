@@ -10,4 +10,5 @@ public class KEYS {
     public static final String KEY_CONCEPT = "concept";
 
     public static final String KEY_CATEGORY = "category";
+
 }

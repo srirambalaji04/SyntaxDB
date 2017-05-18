@@ -24,6 +24,7 @@ import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.databinding.FragmentSearchConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
+import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.views.ToolbarView;
 
@@ -195,8 +196,9 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
     private class SearchesListener implements RequestListener<ConceptsRsp> {
 
         @Override
-        public void onRequestFailure(SpiceException spiceException) {
-            Log.d(TAG, "onRequestFailure: " + spiceException.toString());
+        public void onRequestFailure(SpiceException e) {
+            Log.d(TAG, "onRequestFailure: " + e.toString());
+            ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
         }
 
         @Override

@@ -39,25 +39,6 @@ public class SplashActivity extends AppCompatActivity {
         sendRequest();
     }
 
- /*   private void showAnim() {
-        final TextView waitTxt = (TextView) findViewById(R.id.pls_wait_txt);
-        ValueAnimator animator = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            animator = ValueAnimator.ofFloat(0.3f, 1.0f);
-            animator.setRepeatCount(ValueAnimator.INFINITE);
-            animator.setRepeatMode(ValueAnimator.REVERSE);
-            animator.setDuration(500);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-                        waitTxt.setAlpha(animation.getAnimatedFraction());
-                    }
-                }
-            });
-        }
-    }*/
-
     @Override
     protected void onStop() {
         super.onStop();
