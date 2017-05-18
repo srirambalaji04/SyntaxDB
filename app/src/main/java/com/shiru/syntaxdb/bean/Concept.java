@@ -227,4 +227,25 @@ public class Concept implements Parcelable {
         dest.writeString(related);
         dest.writeString(documentation);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Concept concept = (Concept) o;
+
+        if (!getId().equals(concept.getId())) return false;
+        if (!getName().equals(concept.getName())) return false;
+        return getCategoryId().equals(concept.getCategoryId());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getCategoryId().hashCode();
+        return result;
+    }
 }

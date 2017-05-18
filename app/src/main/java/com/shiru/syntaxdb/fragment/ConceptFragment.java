@@ -16,6 +16,7 @@ import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.databinding.FragmentConceptBinding;
 import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
+import com.shiru.syntaxdb.utils.SharedPreference;
 import com.shiru.syntaxdb.views.ToolbarView;
 
 /**
@@ -80,6 +81,14 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
         notesTxt = (TextView) view.findViewById(R.id.notes_txt);
         exampleTxt = (TextView) view.findViewById(R.id.example_txt);
         headingTitle = (TextView) view.findViewById(R.id.heading_txt);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Concept concept = getArguments().getParcelable(KEYS.KEY_CONCEPT);
+        SharedPreference.saveRecent(concept);
+
     }
 
     private void setupToolbar() {

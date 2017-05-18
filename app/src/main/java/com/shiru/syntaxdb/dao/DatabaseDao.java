@@ -1,6 +1,5 @@
 package com.shiru.syntaxdb.dao;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by shiru on 3/5/2017.
  */
-public class DatabaseDao extends Application {
+public class DatabaseDao {
 
     private Context context;
     private SQLiteOpenHelper helper;
@@ -23,7 +22,7 @@ public class DatabaseDao extends Application {
         helper = SyntaxDBassetHelper.newInstance(context);
     }
 
-    public boolean insertConcept(Concept concept){
+    public boolean insertConcept(Concept concept) {
         ContentValues values = new ContentValues();
         values.put("id", concept.getId());
         values.put("name", concept.getName());
@@ -41,23 +40,23 @@ public class DatabaseDao extends Application {
         values.put("related", concept.getRelated());
         values.put("documentation", concept.getDocumentation());
 
-        if (isDbWritable()){
+        if (isDbWritable()) {
             long result = helper.getWritableDatabase().insert(BuildConfig.TABLE_CONCEPTS, null, values);
             return result > -1;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public void deleteConcept(){
+    public void deleteConcept() {
 
     }
 
-    public List<Concept> getConcepts(){
+    public List<Concept> getConcepts() {
         return null;
     }
 
-    private boolean isDbWritable(){
+    private boolean isDbWritable() {
         return helper.getWritableDatabase().isOpen() && !helper.getWritableDatabase().isReadOnly();
     }
 

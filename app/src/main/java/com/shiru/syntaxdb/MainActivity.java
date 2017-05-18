@@ -7,10 +7,10 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,11 +23,12 @@ import com.shiru.syntaxdb.fragment.CategoriesFragment;
 import com.shiru.syntaxdb.fragment.ConceptFragment;
 import com.shiru.syntaxdb.fragment.ConceptsFragment;
 import com.shiru.syntaxdb.fragment.LanguagesFragment;
+import com.shiru.syntaxdb.fragment.RecentsFragment;
 import com.shiru.syntaxdb.fragment.SearchConceptsFragment;
 import com.shiru.syntaxdb.utils.KEYS;
 
 public class MainActivity extends AppCompatActivity implements LanguagesFragment.LanguagesListener, CategoriesFragment.CategoryListener,
-        ConceptsFragment.ConceptsInteractionListener, SearchConceptsFragment.SearchFragmentListener {
+        ConceptsFragment.ConceptsInteractionListener, SearchConceptsFragment.SearchFragmentListener, RecentsFragment.RecentsListener {
 
     public static final String TAG = "SDB.MainActivity";
 
@@ -65,19 +66,26 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.recents:
+                        RecentsFragment recentsFragment = RecentsFragment.newInstance();
+                        addFragment(recentsFragment, RecentsFragment.TAG, true, false, true);
                         break;
                     case R.id.search:
                         SearchConceptsFragment fragment = SearchConceptsFragment.newInstance();
                         addFragment(fragment, SearchConceptsFragment.TAG, true, false, true);
-                        if (binding.drawerLayout.isDrawerOpen(Gravity.START)) {
-                            binding.drawerLayout.closeDrawer(Gravity.START);
-                        }
                         break;
                 }
+                closeDrawer();
                 return true;
             }
         });
     }
+
+    private void closeDrawer() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
 
     public void addFragment(Fragment fragment, String tag, boolean addtoBackStack, boolean clearBackStack, boolean hideCurrent) {
         FragmentManager fm = getSupportFragmentManager();
@@ -111,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
 
     @Override
     public void onNavigationClicked() {
-        binding.drawerLayout.openDrawer(Gravity.START);
+        binding.drawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override
@@ -128,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
 
     @Override
     public void onConceptSelcted(Concept concept) {
+        onConceptSelected(concept);
+    }
+
+    @Override
+    public void onRecentSelected(Concept concept) {
         onConceptSelected(concept);
     }
 }
