@@ -62,7 +62,7 @@ public class SplashActivity extends AppCompatActivity {
             binding.reqPbar.setVisibility(View.GONE);
             Log.e(TAG, String.valueOf(e.getCause()));
             if (e instanceof NoNetworkException) {
-                UiUtility.showSnackBar(findViewById(R.id.root_layout), e.getMessage());
+                UiUtility.showSnackBar(findViewById(R.id.root_layout), "Switch on the internet to work");
                 SplashActivity.this.finish();
             }
         }

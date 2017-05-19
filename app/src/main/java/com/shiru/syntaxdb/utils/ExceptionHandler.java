@@ -24,11 +24,11 @@ public class ExceptionHandler {
     public static void handleRequestException(Response response) throws Exception {
         switch (response.code()) {
             case HttpURLConnection.HTTP_NOT_FOUND:
-                throw new NotFoundException(response.message());
+                throw new NotFoundException("Resource not found...");
             case HttpURLConnection.HTTP_BAD_REQUEST:
-                throw new BadRequestException(response.message());
+                throw new BadRequestException("Bad request...");
             default:
-                throw new UnknownException(response.message());
+                throw new UnknownException("Unknown Err occured. please try later");
         }
 
     }
