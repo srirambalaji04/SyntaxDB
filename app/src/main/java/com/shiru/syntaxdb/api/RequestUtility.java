@@ -1,12 +1,13 @@
 package com.shiru.syntaxdb.api;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by shiru on 1/16/2017.
@@ -14,9 +15,10 @@ import java.util.concurrent.TimeUnit;
 public class RequestUtility {
 
     public static Response sendApiRequest(String url, HTTPMETHOD method, RequestBody body) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        client.setReadTimeout(30, TimeUnit.SECONDS);
-        client.setConnectTimeout(30, TimeUnit.SECONDS);
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        clientBuilder.readTimeout(30, TimeUnit.SECONDS);
+        clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+        OkHttpClient client = clientBuilder.build();
 
         Request.Builder builder = new Request.Builder();
         builder.url(url);

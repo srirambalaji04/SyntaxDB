@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -77,6 +78,18 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
         binding.setPresenter(new SearchPresenter());
         setupToolbar();
         setAdapter();
+        binding.searchEtxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.d(TAG, "onEditorAction: " + actionId);
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_GO:
+                        sendSearchRequest(binding.searchEtxt.getText().toString());
+                        break;
+                }
+                return true;
+            }
+        });
         return binding.getRoot();
     }
 
@@ -126,6 +139,7 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
         GetAllSearchesRequest request = new GetAllSearchesRequest(querytring);
         SearchesListener listener = new SearchesListener();
         spiceManager.execute(request, listener);
+        binding.searchLoader.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -167,7 +181,7 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
 
     public class SearchPresenter implements View.OnClickListener {
 
-        public TextWatcher textWatcher = new TextWatcher() {
+/*        public TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -185,7 +199,7 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
             public void afterTextChanged(Editable s) {
 
             }
-        };
+        };*/
 
         @Override
         public void onClick(View v) {
@@ -198,11 +212,13 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
         @Override
         public void onRequestFailure(SpiceException e) {
             Log.d(TAG, "onRequestFailure: " + e.toString());
+            binding.searchLoader.setVisibility(View.GONE);
             ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
         }
 
         @Override
         public void onRequestSuccess(ConceptsRsp conceptsRsp) {
+            binding.searchLoader.setVisibility(View.GONE);
             if (conceptsRsp != null) {
                 Log.d(TAG, "onRequestSuccess: " + conceptsRsp.toString());
                 updateAdatper(conceptsRsp.getConcepts());

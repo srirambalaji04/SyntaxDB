@@ -1,7 +1,7 @@
 package com.shiru.syntaxdb.exception;
 
 
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 
 /**
  * Created by bsriram on 26/04/16 12:24 PM in SyntaxDB.

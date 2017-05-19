@@ -10,9 +10,10 @@ import com.shiru.syntaxdb.api.SDBApi;
 import com.shiru.syntaxdb.api.response.bean.LanguagesRsp;
 import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.utils.ExceptionHandler;
-import com.squareup.okhttp.Response;
 
 import java.util.Arrays;
+
+import okhttp3.Response;
 
 /**
  * Created by shiru on 1/16/2017.

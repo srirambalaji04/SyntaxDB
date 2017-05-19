@@ -11,9 +11,10 @@ import com.shiru.syntaxdb.api.response.bean.CategoriesRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.utils.ExceptionHandler;
-import com.squareup.okhttp.Response;
 
 import java.util.Arrays;
+
+import okhttp3.Response;
 
 /**
  * Created by shiru on 1/23/2017.

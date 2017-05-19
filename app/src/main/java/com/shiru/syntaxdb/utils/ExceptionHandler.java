@@ -6,9 +6,10 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.shiru.syntaxdb.exception.BadRequestException;
 import com.shiru.syntaxdb.exception.NotFoundException;
 import com.shiru.syntaxdb.exception.UnknownException;
-import com.squareup.okhttp.Response;
 
 import java.net.HttpURLConnection;
+
+import okhttp3.Response;
 
 /**
  * Utility class for handle server api exceptions.
