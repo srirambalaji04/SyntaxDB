@@ -63,7 +63,13 @@ public class SplashActivity extends AppCompatActivity {
             Log.e(TAG, String.valueOf(e.getCause()));
             if (e instanceof NoNetworkException) {
                 UiUtility.showSnackBar(findViewById(R.id.root_layout), "Switch on the internet to work");
-                SplashActivity.this.finish();
+                findViewById(R.id.root_layout).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        SplashActivity.this.finish();
+                    }
+                }, 1000);
+
             }
         }
 
