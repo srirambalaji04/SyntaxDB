@@ -1,12 +1,13 @@
 package com.shiru.syntaxdb.dao;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-import com.shiru.syntaxdb.BuildConfig;
-import com.shiru.syntaxdb.bean.Concept;
+import com.shiru.syntaxdb.bean.Category;
+import com.shiru.syntaxdb.bean.Language;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,50 +15,66 @@ import java.util.List;
  */
 public class DatabaseDao {
 
-    private Context context;
-    private SQLiteOpenHelper helper;
+    private static DatabaseDao INSTANCE;
+    private SyntaxDBHelper helper;
 
-    public DatabaseDao(Context context) {
-        this.context = context;
-        helper = SyntaxDBassetHelper.newInstance(context);
+    private DatabaseDao(Context context) {
+        helper = new SyntaxDBHelper(context);
     }
 
-    public boolean insertConcept(Concept concept) {
-        ContentValues values = new ContentValues();
-        values.put("id", concept.getId());
-        values.put("name", concept.getName());
-        values.put("categoryId", concept.getCategoryId());
-        values.put("position", concept.getPosition());
-        values.put("languageId", concept.getLanguageId());
-        values.put("languageLink", concept.getLanguageLink());
-        values.put("conceptSearch", concept.getConceptSearch());
-        values.put("conceptLink", concept.getConceptLink());
-        values.put("desc", concept.getDesc());
-        values.put("syntax", concept.getSyntax());
-        values.put("notes", concept.getNotes());
-        values.put("example", concept.getExample());
-        values.put("keywords", concept.getKeywords());
-        values.put("related", concept.getRelated());
-        values.put("documentation", concept.getDocumentation());
-
-        if (isDbWritable()) {
-            long result = helper.getWritableDatabase().insert(BuildConfig.TABLE_CONCEPTS, null, values);
-            return result > -1;
-        } else {
-            return false;
+    public static DatabaseDao getInstance(Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new DatabaseDao(context);
         }
+        return INSTANCE;
     }
 
-    public void deleteConcept() {
+    public List<Language> getLanguages() {
+        List<Language> languages = new ArrayList<>();
+        String getAllLanguagesQuery = "SELECT * FROM language";
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cr = db.rawQuery(getAllLanguagesQuery, null);
+        if (cr != null && cr.getCount() > 0) {
+            cr.moveToFirst();
+            while (cr.moveToNext()) {
+                Language language = new Language();
+                language.setId(cr.getInt(cr.getColumnIndex("id")));
+                language.setLink(cr.getString(cr.getColumnIndex("language_permalink")));
+                language.setName(cr.getString(cr.getColumnIndex("language_name")));
+                language.setVersion(cr.getString(cr.getColumnIndex("language_version")));
+                language.setPosition(cr.getInt(cr.getColumnIndex("position")));
 
+                languages.add(language);
+            }
+            cr.close();
+        }
+        return languages;
     }
 
-    public List<Concept> getConcepts() {
-        return null;
+
+    public List<Category> getCategoriesOfLanguage(Language language) {
+        List<Category> categories = new ArrayList<>();
+        String getAllCategoriesForLangSQL = "SELECT * FROM category WHERE language_id = " + language.getId();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cr = db.rawQuery(getAllCategoriesForLangSQL, null);
+        if (cr != null && cr.getCount() > 0) {
+            cr.moveToFirst();
+            while (cr.moveToNext()) {
+                Category category = new Category();
+                category.setId(cr.getInt(cr.getColumnIndex("id")));
+                category.setName(cr.getString(cr.getColumnIndex("category_name")));
+                category.setPosition(cr.getInt(cr.getColumnIndex("position")));
+                category.setLanguageId(cr.getInt(cr.getColumnIndex("language_id")) + "");
+                category.setLanguagelink(cr.getString(cr.getColumnIndex("language_permalink")));
+                category.setSearch(cr.getString(cr.getColumnIndex("category_search")));
+
+                categories.add(category);
+            }
+            cr.close();
+        }
+
+        return categories;
     }
 
-    private boolean isDbWritable() {
-        return helper.getWritableDatabase().isOpen() && !helper.getWritableDatabase().isReadOnly();
-    }
 
 }

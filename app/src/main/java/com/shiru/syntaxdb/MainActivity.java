@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        LanguagesRsp rsp = getIntent().getParcelableExtra(KEYS.KEY_LANGUAGE);
+//        LanguagesRsp rsp = getIntent().getParcelableExtra(KEYS.KEY_LANGUAGE);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, LanguagesFragment.newInstance(rsp.getLanguages()), LanguagesFragment.TAG)
+                .add(R.id.container, LanguagesFragment.newInstance())
                 .commit();
         setupNavigationView();
     }

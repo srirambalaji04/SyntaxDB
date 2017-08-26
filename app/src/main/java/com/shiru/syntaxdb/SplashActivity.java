@@ -5,25 +5,19 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.exception.NoNetworkException;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-import com.shiru.syntaxdb.api.request.GetLanguagesRequest;
-import com.shiru.syntaxdb.api.response.bean.LanguagesRsp;
 import com.shiru.syntaxdb.databinding.ActivitySplashBinding;
-import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
-import com.shiru.syntaxdb.utils.UiUtility;
 
 public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SDB.SplashActivity";
     private ActivitySplashBinding binding;
     private SpiceManager spiceManager = new SpiceManager(SDBService.class);
+    private Thread thread;
     private AlertDialog dialog;
 
     @Override
@@ -38,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onStart();
         spiceManager.start(this);
         binding.reqPbar.setVisibility(View.VISIBLE);
-        sendRequest();
+        startThread();
     }
 
     @Override
@@ -49,13 +43,41 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void sendRequest() {
-        GetLanguagesRequest request = new GetLanguagesRequest();
-        LanguagesListener listener = new LanguagesListener();
-        spiceManager.execute(request, listener);
+    private void startThread() {
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    synchronized (this) {
+                        wait(3000);
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                move();
+            }
+        };
+
+        thread.start();
     }
 
-    private class LanguagesListener implements RequestListener<LanguagesRsp> {
+    private void move() {
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        SplashActivity.this.startActivity(intent);
+        SplashActivity.this.finish();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent evt) {
+        if (evt.getAction() == MotionEvent.ACTION_DOWN) {
+            synchronized (thread) {
+                thread.notifyAll();
+            }
+        }
+        return true;
+    }
+
+/*    private class LanguagesListener implements RequestListener<LanguagesRsp> {
 
         @Override
         public void onRequestFailure(SpiceException e) {
@@ -83,5 +105,5 @@ public class SplashActivity extends AppCompatActivity {
                 SplashActivity.this.finish();
             }
         }
-    }
+    }*/
 }

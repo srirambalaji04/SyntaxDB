@@ -3,10 +3,11 @@ package com.shiru.syntaxdb.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcelable;
+
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.LanguageAdapter;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentLanguagesBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
@@ -44,11 +46,11 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
     private LanguagesListener mListener;
     private RecyclerView mRecyclerView;
 
-    public static LanguagesFragment newInstance(List<Language> languages) {
+    public static LanguagesFragment newInstance() {
         LanguagesFragment fragment = new LanguagesFragment();
-        Bundle args = new Bundle();
+        /*Bundle args = new Bundle();
         args.putParcelableArrayList(KEYS.KEY_LANGUAGE, (ArrayList<? extends Parcelable>) languages);
-        fragment.setArguments(args);
+        fragment.setArguments(args);*/
         return fragment;
     }
 
@@ -83,7 +85,9 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_languages, container, false);
         findViewsById();
         setupToolbar();
-        setAdapter();
+
+        GetLanguagesTask task = new GetLanguagesTask();
+        task.execute();
 
         Log.d(TAG, "onCreateView" + languages);
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
@@ -111,8 +115,8 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
         ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_menu, this);
     }
 
-    private void setAdapter() {
-        languages = getArguments().getParcelableArrayList(KEYS.KEY_LANGUAGE);
+    private void setAdapter(List<Language> languages) {
+        this.languages= languages;
 
         DefaultItemAnimator animator = new DefaultItemAnimator();
         animator.setAddDuration(1000);
@@ -120,7 +124,6 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         LanguageAdapter adapter = new LanguageAdapter(languages);
         mRecyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -132,6 +135,23 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
         void onLanguageSelected(Language language);
 
         void onNavigationClicked();
+    }
+
+    private class GetLanguagesTask extends AsyncTask<Void, Void, List<Language>>{
+
+        @Override
+        protected List<Language> doInBackground(Void... params) {
+            DatabaseDao dao = DatabaseDao.getInstance(getContext());
+            List<Language> langs =  dao.getLanguages();
+            Log.d(TAG, "langs : " +langs.toString());
+            return langs;
+        }
+
+        @Override
+        protected void onPostExecute(List<Language> languages) {
+            super.onPostExecute(languages);
+            setAdapter(languages);
+        }
     }
 
 }
