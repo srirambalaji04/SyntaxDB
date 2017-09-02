@@ -17,11 +17,11 @@ import java.util.List;
  */
 public class ConceptsAdapter extends RecyclerView.Adapter<ConceptsAdapter.ListViewHolder> {
 
-    private Context context;
+    //    private Context context;
     private List<Concept> concepts;
 
     public ConceptsAdapter(Context context, List<Concept> concepts) {
-        this.context = context;
+//        this.context = context;
         this.concepts = concepts;
     }
 
@@ -36,6 +36,7 @@ public class ConceptsAdapter extends RecyclerView.Adapter<ConceptsAdapter.ListVi
     public void onBindViewHolder(ConceptsAdapter.ListViewHolder holder, int position) {
         Concept concept = concepts.get(position);
         holder.title.setText(concept.getName());
+        holder.lang.setText(concept.getLanguageLink());
     }
 
     @Override
@@ -46,10 +47,12 @@ public class ConceptsAdapter extends RecyclerView.Adapter<ConceptsAdapter.ListVi
     class ListViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
+        private TextView lang;
 
         public ListViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.lang_txt);
+            lang = (TextView) itemView.findViewById(R.id.refer_txt);
         }
     }
 

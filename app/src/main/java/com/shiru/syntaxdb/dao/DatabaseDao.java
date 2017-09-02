@@ -111,5 +111,40 @@ public class DatabaseDao {
         return concepts;
     }
 
+    public List<Concept> getSearchConcepts(String searchQuery) {
+        searchQuery = "%" + searchQuery + "%";
+        List<Concept> concepts = new ArrayList<>();
+        String getAllCategoriesForLangSQL = "select * from concept where concept_search OR concept_name OR concept_permalink OR description LIKE "
+                + "'" + searchQuery + "'";
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cr = db.rawQuery(getAllCategoriesForLangSQL, null);
+        if (cr != null && cr.getCount() > 0) {
+            cr.moveToFirst();
+            while (cr.moveToNext()) {
+                Concept concept = new Concept();
+                concept.setId(cr.getInt(cr.getColumnIndex("id")) + "");
+                concept.setName(cr.getString(cr.getColumnIndex("concept_name")));
+                concept.setPosition(cr.getInt(cr.getColumnIndex("position")));
+                concept.setLanguageId(cr.getInt(cr.getColumnIndex("language_id")) + "");
+                concept.setCategoryId(cr.getInt(cr.getColumnIndex("category_id")) + "");
+                concept.setConceptLink(cr.getString(cr.getColumnIndex("concept_permalink")));
+                concept.setConceptSearch(cr.getString(cr.getColumnIndex("concept_search")));
+                concept.setDesc(cr.getString(cr.getColumnIndex("description")));
+                concept.setDocumentation(cr.getString(cr.getColumnIndex("documentation")));
+                concept.setExample(cr.getString(cr.getColumnIndex("example")));
+                concept.setKeywords(cr.getString(cr.getColumnIndex("keywords")));
+                concept.setLanguageLink(cr.getString(cr.getColumnIndex("language_permalink")));
+                concept.setNotes(cr.getString(cr.getColumnIndex("notes")));
+                concept.setRelated(cr.getString(cr.getColumnIndex("related")));
+                concept.setSyntax(cr.getString(cr.getColumnIndex("syntax")));
+
+                concepts.add(concept);
+            }
+            cr.close();
+        }
+
+        return concepts;
+    }
+
 
 }

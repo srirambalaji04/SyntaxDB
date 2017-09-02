@@ -17,7 +17,7 @@
     <string name="search">Search</string>
     <string name="drawer_open">Drawer Open</string>
     <string name="drawer_close">Drawer Close</string>
-    <string name="search_hint">Search for any concept here</string>
+    <string name="search_hint">Arrays...</string>
     <string name="nothing_found">Nothing Matched your query</string>
     <string name="no_recents_found">Nothing Found.. Go and Search</string>
 </resources>

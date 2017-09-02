@@ -34,6 +34,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.ListVi
     public void onBindViewHolder(LanguageAdapter.ListViewHolder holder, int position) {
         Language language = languages.get(position);
         holder.title.setText(language.getName());
+        holder.lang.setVisibility(View.GONE);
     }
 
     @Override
@@ -45,11 +46,13 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.ListVi
 
         //        private ImageView langLogo;
         private TextView title;
+        private TextView lang;
 
         public ListViewHolder(View itemView) {
             super(itemView);
 //            langLogo = (ImageView) itemView.findViewById(R.id.lang_logo);
             title = (TextView) itemView.findViewById(R.id.lang_txt);
+            lang = (TextView) itemView.findViewById(R.id.refer_txt);
 
         }
     }

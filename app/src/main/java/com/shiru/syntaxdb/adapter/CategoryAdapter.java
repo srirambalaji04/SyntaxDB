@@ -33,8 +33,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ListVi
     @Override
     public void onBindViewHolder(CategoryAdapter.ListViewHolder holder, int position) {
         Category category = categories.get(position);
-        if (category != null)
+        if (category != null) {
             holder.title.setText(category.getName());
+            holder.lang.setText(category.getLanguagelink());
+        }
+
+
     }
 
     @Override
@@ -45,10 +49,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ListVi
     class ListViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
+        private TextView lang;
 
         public ListViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.lang_txt);
+            lang = (TextView) itemView.findViewById(R.id.refer_txt);
         }
     }
 }

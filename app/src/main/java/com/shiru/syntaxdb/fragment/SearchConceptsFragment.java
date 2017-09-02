@@ -2,6 +2,7 @@ package com.shiru.syntaxdb.fragment;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.shiru.syntaxdb.adapter.ConceptsAdapter;
 import com.shiru.syntaxdb.api.request.GetAllSearchesRequest;
 import com.shiru.syntaxdb.api.response.bean.ConceptsRsp;
 import com.shiru.syntaxdb.bean.Concept;
+import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentSearchConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
@@ -72,6 +74,12 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
     }
 
     @Override
+    public void onDestroy() {
+        concepts = null;
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_concepts, container, false);
@@ -84,7 +92,8 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
                 Log.d(TAG, "onEditorAction: " + actionId);
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_GO:
-                        sendSearchRequest(binding.searchEtxt.getText().toString());
+                        getConcepts(binding.searchEtxt.getText().toString());
+//                        sendSearchRequest(binding.searchEtxt.getText().toString());
                         break;
                 }
                 return true;
@@ -140,6 +149,11 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
         SearchesListener listener = new SearchesListener();
         spiceManager.execute(request, listener);
         binding.searchLoader.setVisibility(View.VISIBLE);
+    }
+
+    private void getConcepts(String querytring) {
+        GetConceptsTask task = new GetConceptsTask();
+        task.execute(querytring.split(" "));
     }
 
     @Override
@@ -223,6 +237,22 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
                 Log.d(TAG, "onRequestSuccess: " + conceptsRsp.toString());
                 updateAdatper(conceptsRsp.getConcepts());
             }
+        }
+    }
+
+    private class GetConceptsTask extends AsyncTask<String, Void, List<Concept>> {
+
+        @Override
+        protected List<Concept> doInBackground(String... params) {
+            DatabaseDao dao = DatabaseDao.getInstance(getContext());
+            List<Concept> concepts = dao.getSearchConcepts(params[0]);
+            return concepts;
+        }
+
+        @Override
+        protected void onPostExecute(List<Concept> concepts) {
+            super.onPostExecute(concepts);
+            updateAdatper(concepts);
         }
     }
 }
