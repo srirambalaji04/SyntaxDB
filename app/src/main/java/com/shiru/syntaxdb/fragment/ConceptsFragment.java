@@ -2,6 +2,7 @@ package com.shiru.syntaxdb.fragment;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,26 +10,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.ConceptsAdapter;
-import com.shiru.syntaxdb.api.request.GetConceptsRequest;
-import com.shiru.syntaxdb.api.response.bean.ConceptsRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Concept;
+import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
-import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
-import com.shiru.syntaxdb.utils.UiUtility;
 import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.List;
@@ -80,26 +77,33 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_concepts, container, false);
         findViewsById(binding.getRoot());
         setupToolbar();
-        if (getArguments().containsKey(KEYS.KEY_CATEGORY))
-            setTitle((Category) getArguments().getParcelable(KEYS.KEY_CATEGORY));
-        sendRequest();
+        if (getArguments().containsKey(KEYS.KEY_CATEGORY)) {
+            Category category = (Category) getArguments().getParcelable(KEYS.KEY_CATEGORY);
+            setTitle(category);
+            GetConceptsTask task = new GetConceptsTask();
+            task.execute(category);
+
+
+        }
+
         return binding.getRoot();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        manager.start(getContext());
-        dialog = UiUtility.getDialog(getContext());
-        dialog.show();
+//        manager.start(getContext());
+
+        /*dialog = UiUtility.getDialog(getContext());
+        dialog.show();*/
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (manager.isStarted()) {
+      /*  if (manager.isStarted()) {
             manager.shouldStop();
-        }
+        }*/
     }
 
     private void findViewsById(View view) {
@@ -133,12 +137,12 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
         binding.setTitle(category.getLanguagelink() + " | " + category.getName());
     }
 
-    private void sendRequest() {
+ /*   private void sendRequest() {
         Category category = this.getArguments().getParcelable(KEYS.KEY_CATEGORY);
         GetConceptsRequest request = new GetConceptsRequest(category);
         ConceptsRequestListener listener = new ConceptsRequestListener();
         manager.execute(request, listener);
-    }
+    }*/
 
     @Override
     public void onAttach(Context activity) {
@@ -176,7 +180,7 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
         void onConceptSelected(Concept concept);
     }
 
-    private class ConceptsRequestListener implements RequestListener<ConceptsRsp> {
+/*    private class ConceptsRequestListener implements RequestListener<ConceptsRsp> {
 
         @Override
         public void onRequestFailure(SpiceException e) {
@@ -192,6 +196,25 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
                 if (dialog.isShowing())
                     dialog.dismiss();
             }
+        }
+    }*/
+
+    private class GetConceptsTask extends AsyncTask<Category, Void, List<Concept>> {
+
+        @Override
+        protected List<Concept> doInBackground(Category... params) {
+            DatabaseDao dao = DatabaseDao.getInstance(getContext());
+            List<Concept> concepts = dao.getConceptForCategories(params[0]);
+            Log.d(TAG, "langs : " + concepts.toString());
+            return concepts;
+        }
+
+        @Override
+        protected void onPostExecute(List<Concept> concepts) {
+            super.onPostExecute(concepts);
+            setAdapter(concepts);
+            /*if (dialog.isShowing())
+                dialog.dismiss();*/
         }
     }
 

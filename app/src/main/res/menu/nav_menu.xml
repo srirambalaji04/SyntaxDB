@@ -21,6 +21,14 @@
             android:title="@string/search"
             android:visible="true"
             app:showAsAction="never" />
+
+        <item
+            android:id="@+id/mail_to_dev"
+            android:icon="@drawable/ic_mailto"
+            android:orderInCategory="102"
+            android:title="Suggestions and Feedback"
+            android:visible="true"
+            app:showAsAction="never" />
     </group>
 
 </menu>

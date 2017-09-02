@@ -3,6 +3,7 @@ package com.shiru.syntaxdb.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,18 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.CategoryAdapter;
-import com.shiru.syntaxdb.api.request.GetCategoriesRequest;
-import com.shiru.syntaxdb.api.response.bean.CategoriesRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Language;
+import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentCategoriesBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
-import com.shiru.syntaxdb.utils.ExceptionHandler;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.utils.UiUtility;
@@ -88,9 +85,14 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
         findViewsById(binding.getRoot());
         setupToolbar();
 
-        if (getArguments().containsKey(KEYS.KEY_LANGUAGE))
-            setTitle((Language) getArguments().getParcelable(KEYS.KEY_LANGUAGE));
-        sendRequest();
+        if (getArguments().containsKey(KEYS.KEY_LANGUAGE)) {
+            Language language = (Language) getArguments().getParcelable(KEYS.KEY_LANGUAGE);
+            setTitle(language);
+            GetCategoriesTask task = new GetCategoriesTask();
+            task.execute(language);
+        }
+
+
         return binding.getRoot();
     }
 
@@ -98,12 +100,12 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
         cateList = (RecyclerView) view.findViewById(R.id.cate_list);
     }
 
-    private void sendRequest() {
+/*    private void sendRequest() {
         Language language = getArguments().getParcelable(KEYS.KEY_LANGUAGE);
         GetCategoriesRequest request = new GetCategoriesRequest(language);
         CategoriesListener listener = new CategoriesListener();
         spiceManager.execute(request, listener);
-    }
+    }*/
 
     @Override
     public void onStart() {
@@ -159,19 +161,39 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
         void onCategorySelected(Language language, Category category);
     }
 
-    private class CategoriesListener implements RequestListener<CategoriesRsp> {
+    /*    private class CategoriesListener implements RequestListener<CategoriesRsp> {
+
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Log.e(TAG, "onRequestFailure" + e.toString());
+                ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            }
+
+            @Override
+            public void onRequestSuccess(CategoriesRsp categoriesRsp) {
+                setAdapter(categoriesRsp.getCategoryList());
+                if (dialog.isShowing())
+                    dialog.dismiss();
+            }
+
+        }*/
+    private class GetCategoriesTask extends AsyncTask<Language, Void, List<Category>> {
 
         @Override
-        public void onRequestFailure(SpiceException e) {
-            Log.e(TAG, "onRequestFailure" + e.toString());
-            ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
-            if (dialog.isShowing())
-                dialog.dismiss();
+        protected List<Category> doInBackground(Language... params) {
+            DatabaseDao dao = DatabaseDao.getInstance(getContext());
+            List<Category> categories = dao.getCategoriesOfLanguage(params[0]);
+            Log.d(TAG, "langs : " + categories.toString());
+            return categories;
+
         }
 
         @Override
-        public void onRequestSuccess(CategoriesRsp categoriesRsp) {
-            setAdapter(categoriesRsp.getCategoryList());
+        protected void onPostExecute(List<Category> categories) {
+            super.onPostExecute(categories);
+            setAdapter(categories);
             if (dialog.isShowing())
                 dialog.dismiss();
         }

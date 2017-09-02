@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.bean.Concept;
@@ -67,12 +66,12 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
         setConcept(concept);
         setupToolbar();
 
-        binding.saveOfflineBtn.setOnClickListener(new View.OnClickListener() {
+       /* binding.saveOfflineBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveOffline(concept);
             }
-        });
+        });*/
         return binding.getRoot();
     }
 
@@ -111,15 +110,9 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
         mListener = null;
     }
 
-    private void saveOffline(Concept concept) {
+/*    private void saveOffline(Concept concept) {
         Toast.makeText(getContext(), "Coming soon", Toast.LENGTH_SHORT).show();
-        /*DatabaseDao dao = new DatabaseDao(getContext());
-        if (dao.insertConcept(concept)){
-            Toast.makeText(getContext(), "Saved Concept" +  concept.getName() +"to offline", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(getContext(), "Failed to save offline", Toast.LENGTH_SHORT).show();
-        }*/
-    }
+    }*/
 
     @Override
     public void onNavigationClick(View view) {

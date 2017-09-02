@@ -1,5 +1,6 @@
 package com.shiru.syntaxdb;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +15,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.shiru.syntaxdb.api.response.bean.LanguagesRsp;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.bean.Language;
@@ -25,7 +25,6 @@ import com.shiru.syntaxdb.fragment.ConceptsFragment;
 import com.shiru.syntaxdb.fragment.LanguagesFragment;
 import com.shiru.syntaxdb.fragment.RecentsFragment;
 import com.shiru.syntaxdb.fragment.SearchConceptsFragment;
-import com.shiru.syntaxdb.utils.KEYS;
 
 public class MainActivity extends AppCompatActivity implements LanguagesFragment.LanguagesListener, CategoriesFragment.CategoryListener,
         ConceptsFragment.ConceptsInteractionListener, SearchConceptsFragment.SearchFragmentListener, RecentsFragment.RecentsListener {
@@ -73,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
                         SearchConceptsFragment fragment = SearchConceptsFragment.newInstance();
                         addFragment(fragment, SearchConceptsFragment.TAG, true, false, true);
                         break;
+                    case R.id.mail_to_dev:
+                        sendMail();
+                        break;
+
                 }
                 closeDrawer();
                 return true;
@@ -84,6 +87,18 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
         }
+    }
+
+    private void sendMail() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setType("text/plain");
+        intent.setType("message/rfc822");
+        String[] mails = {"srirambalaji04@gmail.com"};
+        intent.putExtra(Intent.EXTRA_EMAIL, mails);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "FEEDBACK OR SUGGESTION");
+        intent.putExtra(Intent.EXTRA_TEXT, "");
+        Intent mailer = Intent.createChooser(intent, "Open with Email");
+        startActivity(mailer);
     }
 
 
