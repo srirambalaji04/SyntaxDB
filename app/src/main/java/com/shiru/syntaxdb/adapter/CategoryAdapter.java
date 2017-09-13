@@ -9,8 +9,10 @@ import android.widget.TextView;
 
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.bean.Category;
+import com.shiru.syntaxdb.bean.Concept;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shiru on 1/23/2017.
@@ -18,6 +20,7 @@ import java.util.List;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ListViewHolder> {
 
     private List<Category> categories;
+    private Map<Category, List<Concept>> notes;
 
     public CategoryAdapter(List<Category> categories) {
         this.categories = categories;

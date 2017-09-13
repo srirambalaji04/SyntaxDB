@@ -20,6 +20,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.CategoryAdapter;
 import com.shiru.syntaxdb.bean.Category;
+import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentCategoriesBinding;
@@ -30,7 +31,9 @@ import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.utils.UiUtility;
 import com.shiru.syntaxdb.views.ToolbarView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -197,7 +200,30 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
             if (dialog.isShowing())
                 dialog.dismiss();
         }
+    }
 
+    private class GetCatesTask extends AsyncTask<Language, Void, Map<Category, List<Concept>>> {
+
+        @Override
+        protected Map<Category, List<Concept>> doInBackground(Language... params) {
+            DatabaseDao dao = DatabaseDao.getInstance(getContext());
+            List<Category> categories = dao.getCategoriesOfLanguage(params[0]);
+            Map<Category, List<Concept>> cateMap = new HashMap();
+            for(Category category : categories){
+                List<Concept> concepts = dao.getConceptForCategories(category);
+                cateMap.put(category, concepts);
+            }
+
+            Log.d(TAG, "langs : " + categories.toString());
+            return cateMap;
+
+        }
+
+        @Override
+        protected void onPostExecute(Map<Category, List<Concept>> cateMap) {
+            super.onPostExecute(cateMap);
+
+        }
     }
 
 }
