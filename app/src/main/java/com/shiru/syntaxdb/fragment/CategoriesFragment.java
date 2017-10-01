@@ -5,8 +5,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,15 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.octo.android.robospice.SpiceManager;
 import com.shiru.syntaxdb.R;
-import com.shiru.syntaxdb.adapter.CategoryAdapter;
+import com.shiru.syntaxdb.adapter.ExpandableCategoryAdapter;
 import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentCategoriesBinding;
-import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.utils.SDBService;
@@ -33,7 +31,6 @@ import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +40,7 @@ import java.util.Map;
  * Use the {@link CategoriesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoriesFragment extends Fragment implements ToolbarListener {
+public class CategoriesFragment extends Fragment implements ToolbarListener, ExpandableCategoryAdapter.ExpandableChildClickListener {
 
     public static final String TAG = "SDB.CategoriesFragment";
 
@@ -51,6 +48,7 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
     private RecyclerView cateList;
     private SpiceManager spiceManager = new SpiceManager(SDBService.class);
     private AlertDialog dialog;
+    private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
 
     private CategoryListener mListener;
 
@@ -91,7 +89,7 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
         if (getArguments().containsKey(KEYS.KEY_LANGUAGE)) {
             Language language = (Language) getArguments().getParcelable(KEYS.KEY_LANGUAGE);
             setTitle(language);
-            GetCategoriesTask task = new GetCategoriesTask();
+            GetCatesTask task = new GetCatesTask();
             task.execute(language);
         }
 
@@ -126,7 +124,7 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
         }
     }
 
-    private void setAdapter(final List<Category> categories) {
+    /*private void setAdapterOld(final List<Category> categories) {
         CategoryAdapter categoryAdapter = new CategoryAdapter(categories);
         final Language language = getArguments().getParcelable(KEYS.KEY_LANGUAGE);
         cateList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -145,6 +143,22 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
 
             }
         });
+    }*/
+
+    private void setAdapter(HashMap<Category, List<Concept>> cateMap) {
+        RecyclerView.Adapter mWrappedAdapter;
+
+        ExpandableCategoryAdapter categoryAdapter = new ExpandableCategoryAdapter(cateMap);
+        categoryAdapter.setConceptClickListener(this);
+//        final Language language = getArguments().getParcelable(KEYS.KEY_LANGUAGE);
+        cateList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mRecyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(null);
+        mWrappedAdapter = mRecyclerViewExpandableItemManager.createWrappedAdapter(categoryAdapter);
+        cateList.setAdapter(mWrappedAdapter);
+        mRecyclerViewExpandableItemManager.attachRecyclerView(cateList);
+        cateList.setHasFixedSize(false);
+
     }
 
     private void setupToolbar() {
@@ -160,8 +174,18 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
         getFragmentManager().popBackStack();
     }
 
+    /**
+     * From new RecyclerView
+     */
+    @Override
+    public void onChildClick(Concept concept) {
+        mListener.onConceptSelected(concept);
+    }
+
     public interface CategoryListener {
         void onCategorySelected(Language language, Category category);
+
+        void onConceptSelected(Concept concept);
     }
 
     /*    private class CategoriesListener implements RequestListener<CategoriesRsp> {
@@ -181,7 +205,9 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
                     dialog.dismiss();
             }
 
-        }*/
+        }
+
+
     private class GetCategoriesTask extends AsyncTask<Language, Void, List<Category>> {
 
         @Override
@@ -200,28 +226,32 @@ public class CategoriesFragment extends Fragment implements ToolbarListener {
             if (dialog.isShowing())
                 dialog.dismiss();
         }
-    }
+    } */
 
-    private class GetCatesTask extends AsyncTask<Language, Void, Map<Category, List<Concept>>> {
+    private class GetCatesTask extends AsyncTask<Language, Void, HashMap<Category, List<Concept>>> {
 
         @Override
-        protected Map<Category, List<Concept>> doInBackground(Language... params) {
+        protected HashMap<Category, List<Concept>> doInBackground(Language... params) {
             DatabaseDao dao = DatabaseDao.getInstance(getContext());
             List<Category> categories = dao.getCategoriesOfLanguage(params[0]);
-            Map<Category, List<Concept>> cateMap = new HashMap();
-            for(Category category : categories){
+            HashMap<Category, List<Concept>> cateMap = new HashMap<Category, List<Concept>>();
+            for (Category category : categories) {
                 List<Concept> concepts = dao.getConceptForCategories(category);
                 cateMap.put(category, concepts);
             }
 
-            Log.d(TAG, "langs : " + categories.toString());
+            Log.d(TAG, "cateMap : " + cateMap.toString());
             return cateMap;
 
         }
 
         @Override
-        protected void onPostExecute(Map<Category, List<Concept>> cateMap) {
+        protected void onPostExecute(HashMap<Category, List<Concept>> cateMap) {
             super.onPostExecute(cateMap);
+            setAdapter(cateMap);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
 
         }
     }

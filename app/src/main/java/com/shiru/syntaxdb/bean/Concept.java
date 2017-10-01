@@ -248,4 +248,25 @@ public class Concept implements Parcelable {
         result = 31 * result + getCategoryId().hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Concept{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", position=" + position +
+                ", languageId='" + languageId + '\'' +
+                ", languageLink='" + languageLink + '\'' +
+                ", conceptSearch='" + conceptSearch + '\'' +
+                ", conceptLink='" + conceptLink + '\'' +
+                ", desc='" + desc + '\'' +
+                ", syntax='" + syntax + '\'' +
+                ", notes='" + notes + '\'' +
+                ", example='" + example + '\'' +
+                ", keywords='" + keywords + '\'' +
+                ", related='" + related + '\'' +
+                ", documentation='" + documentation + '\'' +
+                '}';
+    }
 }
