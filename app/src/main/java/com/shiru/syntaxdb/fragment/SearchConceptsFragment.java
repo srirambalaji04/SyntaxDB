@@ -117,8 +117,9 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
     }
 
     private void setupToolbar() {
-        new ToolbarView(binding.toolbar.realToolbar,
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar,
                 getString(R.string.search), R.drawable.ic_back_arrow, this);
+        view.setMenu(R.menu.toolbar_menu);
     }
 
     private void setAdapter() {

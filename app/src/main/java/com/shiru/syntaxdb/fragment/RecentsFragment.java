@@ -67,8 +67,9 @@ public class RecentsFragment extends Fragment implements ToolbarListener {
     }
 
     private void setupToolbar() {
-        new ToolbarView(
+        ToolbarView view = new ToolbarView(
                 binding.toolbar.realToolbar, "Recents", R.drawable.ic_back_arrow, this);
+        view.setMenu(R.menu.toolbar_menu);
     }
 
     private void setAdapter() {

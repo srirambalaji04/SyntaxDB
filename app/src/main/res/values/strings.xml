@@ -20,4 +20,7 @@
     <string name="search_hint">Arrays...</string>
     <string name="nothing_found">Nothing Matched your query</string>
     <string name="no_recents_found">Nothing Found.. Go and Search</string>
+    <string name="share">Share</string>
+    <string name="about_me">About</string>
+
 </resources>

@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,10 +23,8 @@ import com.shiru.syntaxdb.dao.DatabaseDao;
 import com.shiru.syntaxdb.databinding.FragmentLanguagesBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
-import com.shiru.syntaxdb.utils.KEYS;
 import com.shiru.syntaxdb.views.ToolbarView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -113,6 +110,7 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
 
     private void setupToolbar() {
         ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_menu, this);
+        view.setMenu(R.menu.toolbar_menu);
     }
 
     private void setAdapter(List<Language> languages) {

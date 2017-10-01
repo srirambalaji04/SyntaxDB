@@ -92,6 +92,7 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
 
     private void setupToolbar() {
         ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this);
+        view.setMenu(R.menu.toolbar_menu);
     }
 
     private void setConcept(Concept concept) {

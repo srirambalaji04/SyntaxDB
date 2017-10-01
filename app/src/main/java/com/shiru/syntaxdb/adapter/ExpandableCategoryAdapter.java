@@ -1,10 +1,14 @@
 package com.shiru.syntaxdb.adapter;
 
+import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.annotation.IntRange;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemConstants;
@@ -28,6 +32,7 @@ public class ExpandableCategoryAdapter extends AbstractExpandableItemAdapter<Exp
 
     private HashMap<Category, List<Concept>> mDataSource;
     private ExpandableChildClickListener mListener;
+    private Context mContext;
 
     // NOTE: Make accessible with short name
     private interface Expandable extends ExpandableItemConstants {
@@ -41,8 +46,9 @@ public class ExpandableCategoryAdapter extends AbstractExpandableItemAdapter<Exp
         mListener = listener;
     }
 
-    public ExpandableCategoryAdapter(HashMap<Category, List<Concept>> mDataSource) {
+    public ExpandableCategoryAdapter(HashMap<Category, List<Concept>> mDataSource, Context mContext) {
         this.mDataSource = mDataSource;
+        this.mContext = mContext;
         setHasStableIds(true);
 
     }
@@ -68,11 +74,13 @@ public class ExpandableCategoryAdapter extends AbstractExpandableItemAdapter<Exp
 
         private TextView childTitleTxt;
         private TextView childLangTxt;
+        private ImageView navIcon;
 
         CategoryChildViewHolder(View itemView) {
             super(itemView);
             childTitleTxt = (TextView) itemView.findViewById(R.id.lang_txt);
             childLangTxt = (TextView) itemView.findViewById(R.id.refer_txt);
+            navIcon = (ImageView) itemView.findViewById(R.id.arrow_icn);
         }
     }
 
@@ -115,6 +123,7 @@ public class ExpandableCategoryAdapter extends AbstractExpandableItemAdapter<Exp
     public CategoryChildViewHolder onCreateChildViewHolder(ViewGroup parent, @IntRange(from = -8388608L, to = 8388607L) int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_item, parent, false);
+        view.setBackgroundColor(ContextCompat.getColor(parent.getContext(), R.color.colorPrimary));
         return new CategoryChildViewHolder(view);
     }
 
@@ -137,6 +146,8 @@ public class ExpandableCategoryAdapter extends AbstractExpandableItemAdapter<Exp
         final Concept concept = concepts.get(childPosition);
 
         holder.childTitleTxt.setText(concept.getName());
+        holder.childTitleTxt.setTextColor(ContextCompat.getColor(mContext, android.R.color.white));
+        holder.navIcon.setColorFilter(ContextCompat.getColor(mContext, android.R.color.white), PorterDuff.Mode.SRC_ATOP);
         holder.childLangTxt.setVisibility(View.GONE);
 
         holder.itemView.setClickable(true);

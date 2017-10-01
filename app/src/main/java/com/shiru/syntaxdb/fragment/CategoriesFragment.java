@@ -148,7 +148,7 @@ public class CategoriesFragment extends Fragment implements ToolbarListener, Exp
     private void setAdapter(HashMap<Category, List<Concept>> cateMap) {
         RecyclerView.Adapter mWrappedAdapter;
 
-        ExpandableCategoryAdapter categoryAdapter = new ExpandableCategoryAdapter(cateMap);
+        ExpandableCategoryAdapter categoryAdapter = new ExpandableCategoryAdapter(cateMap, getContext());
         categoryAdapter.setConceptClickListener(this);
 //        final Language language = getArguments().getParcelable(KEYS.KEY_LANGUAGE);
         cateList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -163,6 +163,7 @@ public class CategoriesFragment extends Fragment implements ToolbarListener, Exp
 
     private void setupToolbar() {
         ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this);
+        view.setMenu(R.menu.toolbar_menu);
     }
 
     private void setTitle(Language selectedLanguage) {
