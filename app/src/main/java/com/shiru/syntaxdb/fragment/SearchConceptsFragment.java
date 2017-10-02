@@ -16,12 +16,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.ConceptsAdapter;
-import com.shiru.syntaxdb.api.request.GetAllSearchesRequest;
 import com.shiru.syntaxdb.api.response.bean.ConceptsRsp;
 import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.dao.DatabaseDao;
@@ -29,7 +27,6 @@ import com.shiru.syntaxdb.databinding.FragmentSearchConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.ExceptionHandler;
-import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.ArrayList;
@@ -48,7 +45,6 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
 
     private SearchFragmentListener mListener;
     private FragmentSearchConceptsBinding binding;
-    private SpiceManager spiceManager = new SpiceManager(SDBService.class);
 
     private List<Concept> concepts;
 
@@ -105,14 +101,10 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
     @Override
     public void onStart() {
         super.onStart();
-        spiceManager.start(getContext());
     }
 
     @Override
     public void onStop() {
-        if (spiceManager.isStarted()) {
-            spiceManager.shouldStop();
-        }
         super.onStop();
     }
 
@@ -145,12 +137,12 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
         binding.noDataTxt.setVisibility(visino);
     }
 
-    private void sendSearchRequest(String querytring) {
+    /*private void sendSearchRequest(String querytring) {
         GetAllSearchesRequest request = new GetAllSearchesRequest(querytring);
         SearchesListener listener = new SearchesListener();
         spiceManager.execute(request, listener);
         binding.searchLoader.setVisibility(View.VISIBLE);
-    }
+    }*/
 
     private void getConcepts(String querytring) {
         GetConceptsTask task = new GetConceptsTask();
@@ -239,7 +231,7 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
 
         @Override
         public void onRequestSuccess(ConceptsRsp conceptsRsp) {
-            binding.searchLoader.setVisibility(View.GONE);
+
             if (conceptsRsp != null) {
                 Log.d(TAG, "onRequestSuccess: " + conceptsRsp.toString());
                 updateAdatper(conceptsRsp.getConcepts());
@@ -251,14 +243,26 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
 
         @Override
         protected List<Concept> doInBackground(String... params) {
-            DatabaseDao dao = DatabaseDao.getInstance(getContext());
-            List<Concept> concepts = dao.getSearchConcepts(params[0]);
-            return concepts;
+            List<Concept> concepts = new ArrayList<>();
+            if (params != null && params.length > 0) {
+                DatabaseDao dao = DatabaseDao.getInstance(getContext());
+
+                for (int i = 0; i < params.length; i++) {
+                    if (params[i].length() > 3) {
+                        List<Concept> conceptsList = dao.getSearchConcepts(params[i]);
+                        concepts.addAll(conceptsList);
+                    }
+                }
+                return concepts;
+            } else {
+                return concepts;
+            }
         }
 
         @Override
         protected void onPostExecute(List<Concept> concepts) {
             super.onPostExecute(concepts);
+            binding.searchLoader.setVisibility(View.GONE);
             updateAdatper(concepts);
         }
     }

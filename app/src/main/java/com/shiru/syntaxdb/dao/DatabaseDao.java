@@ -114,7 +114,7 @@ public class DatabaseDao {
     public List<Concept> getSearchConcepts(String searchQuery) {
         searchQuery = "%" + searchQuery + "%";
         List<Concept> concepts = new ArrayList<>();
-        String getAllCategoriesForLangSQL = "select * from concept where concept_search OR concept_name OR concept_permalink OR description LIKE "
+        String getAllCategoriesForLangSQL = "select * from concept where concept_search OR concept_name OR concept_permalink OR description OR language_permalink LIKE "
                 + "'" + searchQuery + "'";
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cr = db.rawQuery(getAllCategoriesForLangSQL, null);
