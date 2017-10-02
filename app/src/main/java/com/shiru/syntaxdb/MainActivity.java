@@ -19,6 +19,7 @@ import com.shiru.syntaxdb.bean.Category;
 import com.shiru.syntaxdb.bean.Concept;
 import com.shiru.syntaxdb.bean.Language;
 import com.shiru.syntaxdb.databinding.ActivityMainBinding;
+import com.shiru.syntaxdb.fragment.AboutFragment;
 import com.shiru.syntaxdb.fragment.CategoriesFragment;
 import com.shiru.syntaxdb.fragment.ConceptFragment;
 import com.shiru.syntaxdb.fragment.ConceptsFragment;
@@ -135,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements LanguagesFragment
     @Override
     public void onNavigationClicked() {
         binding.drawerLayout.openDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onMenuClick() {
+        AboutFragment fragment = AboutFragment.newInstance(null, null);
+        addFragment(fragment, AboutFragment.TAG, true, false, true);
     }
 
     @Override

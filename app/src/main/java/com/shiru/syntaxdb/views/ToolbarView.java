@@ -1,12 +1,13 @@
 package com.shiru.syntaxdb.views;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.MenuRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.SDBUtil;
 
@@ -19,12 +20,12 @@ public class ToolbarView implements Toolbar.OnClickListener, Toolbar.OnMenuItemC
     private String title;
     private int navIcon;
     private ToolbarListener mListener;
-    private Context mContext;
+    private Activity mContext;
 
-    public ToolbarView(Toolbar toolbar, String title, int navIcon, ToolbarListener listener) {
+    public ToolbarView(Toolbar toolbar, String title, int navIcon, ToolbarListener listener, Activity activity) {
         this.toolbar = toolbar;
         this.toolbar.setOnMenuItemClickListener(this);
-        mContext = this.toolbar.getContext();
+        mContext = activity;
         this.title = title;
         this.navIcon = navIcon;
         this.mListener = listener;
@@ -49,7 +50,15 @@ public class ToolbarView implements Toolbar.OnClickListener, Toolbar.OnMenuItemC
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        SDBUtil.Share(mContext);
-        return true;
+        if (item.getItemId() == R.id.share) {
+            SDBUtil.Share(mContext);
+            return true;
+        } else if (item.getItemId() == R.id.about) {
+            mListener.onMenuClick(item);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

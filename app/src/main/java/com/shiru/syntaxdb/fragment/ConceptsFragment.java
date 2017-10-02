@@ -7,15 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.octo.android.robospice.SpiceManager;
 import com.shiru.syntaxdb.R;
 import com.shiru.syntaxdb.adapter.ConceptsAdapter;
 import com.shiru.syntaxdb.bean.Category;
@@ -25,7 +24,6 @@ import com.shiru.syntaxdb.databinding.FragmentConceptsBinding;
 import com.shiru.syntaxdb.listener.ItemClickSupport;
 import com.shiru.syntaxdb.listener.ToolbarListener;
 import com.shiru.syntaxdb.utils.KEYS;
-import com.shiru.syntaxdb.utils.SDBService;
 import com.shiru.syntaxdb.views.ToolbarView;
 
 import java.util.List;
@@ -44,9 +42,7 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
 
     private FragmentConceptsBinding binding;
     private RecyclerView mRecyclerView;
-    private SpiceManager manager = new SpiceManager(SDBService.class);
     private ConceptsInteractionListener mListener;
-    private AlertDialog dialog;
 
     public ConceptsFragment() {
         // Required empty public constructor
@@ -82,8 +78,6 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
             setTitle(category);
             GetConceptsTask task = new GetConceptsTask();
             task.execute(category);
-
-
         }
 
         return binding.getRoot();
@@ -92,18 +86,12 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
     @Override
     public void onStart() {
         super.onStart();
-//        manager.start(getContext());
-
-        /*dialog = UiUtility.getDialog(getContext());
-        dialog.show();*/
     }
 
     @Override
     public void onStop() {
         super.onStop();
-      /*  if (manager.isStarted()) {
-            manager.shouldStop();
-        }*/
+
     }
 
     private void findViewsById(View view) {
@@ -130,20 +118,13 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
     }
 
     private void setupToolbar() {
-        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this);
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this, getActivity());
         view.setMenu(R.menu.toolbar_menu);
     }
 
     private void setTitle(Category category) {
         binding.setTitle(category.getLanguagelink() + " | " + category.getName());
     }
-
- /*   private void sendRequest() {
-        Category category = this.getArguments().getParcelable(KEYS.KEY_CATEGORY);
-        GetConceptsRequest request = new GetConceptsRequest(category);
-        ConceptsRequestListener listener = new ConceptsRequestListener();
-        manager.execute(request, listener);
-    }*/
 
     @Override
     public void onAttach(Context activity) {
@@ -167,6 +148,11 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
         getFragmentManager().popBackStack();
     }
 
+    @Override
+    public void onMenuClick(MenuItem item) {
+        mListener.onMenuClick();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -179,26 +165,9 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
      */
     public interface ConceptsInteractionListener {
         void onConceptSelected(Concept concept);
+
+        void onMenuClick();
     }
-
-/*    private class ConceptsRequestListener implements RequestListener<ConceptsRsp> {
-
-        @Override
-        public void onRequestFailure(SpiceException e) {
-            ExceptionHandler.handleListenerException(e, getActivity().findViewById(R.id.container));
-            if (dialog.isShowing())
-                dialog.dismiss();
-        }
-
-        @Override
-        public void onRequestSuccess(ConceptsRsp conceptsRsp) {
-            if (conceptsRsp != null) {
-                setAdapter(conceptsRsp.getConcepts());
-                if (dialog.isShowing())
-                    dialog.dismiss();
-            }
-        }
-    }*/
 
     private class GetConceptsTask extends AsyncTask<Category, Void, List<Concept>> {
 
@@ -214,8 +183,6 @@ public class ConceptsFragment extends Fragment implements ToolbarListener {
         protected void onPostExecute(List<Concept> concepts) {
             super.onPostExecute(concepts);
             setAdapter(concepts);
-            /*if (dialog.isShowing())
-                dialog.dismiss();*/
         }
     }
 

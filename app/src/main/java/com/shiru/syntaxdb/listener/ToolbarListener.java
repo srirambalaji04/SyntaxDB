@@ -1,5 +1,6 @@
 package com.shiru.syntaxdb.listener;
 
+import android.view.MenuItem;
 import android.view.View;
 
 /**
@@ -7,4 +8,6 @@ import android.view.View;
  */
 public interface ToolbarListener {
     void onNavigationClick(View view);
+
+    void onMenuClick(MenuItem item);
 }

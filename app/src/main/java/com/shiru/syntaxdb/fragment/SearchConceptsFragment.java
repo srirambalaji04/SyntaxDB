@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -93,7 +94,6 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_GO:
                         getConcepts(binding.searchEtxt.getText().toString());
-//                        sendSearchRequest(binding.searchEtxt.getText().toString());
                         break;
                 }
                 return true;
@@ -118,7 +118,7 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
 
     private void setupToolbar() {
         ToolbarView view = new ToolbarView(binding.toolbar.realToolbar,
-                getString(R.string.search), R.drawable.ic_back_arrow, this);
+                getString(R.string.search), R.drawable.ic_back_arrow, this, getActivity());
         view.setMenu(R.menu.toolbar_menu);
     }
 
@@ -179,6 +179,11 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
         getFragmentManager().popBackStack();
     }
 
+    @Override
+    public void onMenuClick(MenuItem item) {
+        mListener.onMenuClick();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -190,6 +195,7 @@ public class SearchConceptsFragment extends Fragment implements ToolbarListener 
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface SearchFragmentListener {
+        void onMenuClick();
 
         void onConceptSelcted(Concept concept);
     }

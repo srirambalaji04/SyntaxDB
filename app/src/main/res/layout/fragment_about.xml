@@ -1,0 +1,107 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="title"
+            type="String" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toolbar"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/heading_txt"
+                    style="@style/AppTheme.ContentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:text="@{title}"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/author_title_txt"
+                    style="@style/AppTheme.TitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/heading_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:text="@string/author_title" />
+
+                <TextView
+                    android:id="@+id/author_txt"
+                    style="@style/AppTheme.ContentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/author_title_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:text="Sriram. B" />
+
+                <TextView
+                    android:id="@+id/about_title_txt"
+                    style="@style/AppTheme.TitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/author_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:text="@string/about_title" />
+
+                <TextView
+                    android:id="@+id/about_txt"
+                    style="@style/AppTheme.ContentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/about_title_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:text="@string/about_me_txt" />
+
+                <TextView
+                    android:id="@+id/profiles_title_txt"
+                    style="@style/AppTheme.TitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/about_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:text="@string/profile" />
+
+                <TextView
+                    android:id="@+id/linkedin_profiles_txt"
+                    style="@style/AppTheme.ContentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profiles_title_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:autoLink="web"
+                    android:text="@string/linkedin_profile" />
+
+                <TextView
+                    android:id="@+id/stack_profiles_txt"
+                    style="@style/AppTheme.ContentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linkedin_profiles_txt"
+                    android:layout_margin="@dimen/cpt_heading_mrgn"
+                    android:autoLink="web"
+                    android:text="@string/stack_profile" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+</layout>

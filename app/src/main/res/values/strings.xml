@@ -22,5 +22,11 @@
     <string name="no_recents_found">Nothing Found.. Go and Search</string>
     <string name="share">Share</string>
     <string name="about_me">About</string>
+    <string name="author_title">Author</string>
+    <string name="about_title">About Me</string>
+    <string name="about_me_txt">I am Sriram \n  An android dev and Techy Guy developing Apps for my satisfaction</string>
+    <string name="profile">Professional Profile</string>
+    <string name="linkedin_profile">https://www.linkedin.com/in/sriram-balaji-0465ab43/</string>
+    <string name="stack_profile">https://stackoverflow.com/users/5856751/sriram-balaji</string>
 
 </resources>

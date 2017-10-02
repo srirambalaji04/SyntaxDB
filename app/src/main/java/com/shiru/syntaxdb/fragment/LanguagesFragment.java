@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -109,7 +110,7 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
     }
 
     private void setupToolbar() {
-        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_menu, this);
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_menu, this, getActivity());
         view.setMenu(R.menu.toolbar_menu);
     }
 
@@ -129,10 +130,17 @@ public class LanguagesFragment extends Fragment implements ToolbarListener {
         mListener.onNavigationClicked();
     }
 
+    @Override
+    public void onMenuClick(MenuItem item) {
+        mListener.onMenuClick();
+    }
+
     public interface LanguagesListener {
         void onLanguageSelected(Language language);
 
         void onNavigationClicked();
+
+        void onMenuClick();
     }
 
     private class GetLanguagesTask extends AsyncTask<Void, Void, List<Language>>{

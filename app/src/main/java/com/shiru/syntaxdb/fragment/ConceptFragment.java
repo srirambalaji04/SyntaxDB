@@ -2,10 +2,10 @@ package com.shiru.syntaxdb.fragment;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -31,11 +31,6 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
     public static final String TAG = "SDB.ConceptFragment";
 
     private FragmentConceptBinding binding;
-    private TextView syntaxTxt;
-    private TextView notesTxt;
-    private TextView exampleTxt;
-    private TextView headingTitle;
-    private ConceptListener mListener;
 
 
     public static ConceptFragment newInstance(Concept concept) {
@@ -66,20 +61,12 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
         setConcept(concept);
         setupToolbar();
 
-       /* binding.saveOfflineBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveOffline(concept);
-            }
-        });*/
         return binding.getRoot();
     }
 
     private void findViewsById(View view) {
-        syntaxTxt = (TextView) view.findViewById(R.id.syntax_txt);
-        notesTxt = (TextView) view.findViewById(R.id.notes_txt);
-        exampleTxt = (TextView) view.findViewById(R.id.example_txt);
-        headingTitle = (TextView) view.findViewById(R.id.heading_txt);
+        TextView exampleTxt = (TextView) view.findViewById(R.id.example_txt);
+        TextView headingTitle = (TextView) view.findViewById(R.id.heading_txt);
     }
 
     @Override
@@ -91,7 +78,7 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
     }
 
     private void setupToolbar() {
-        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this);
+        ToolbarView view = new ToolbarView(binding.toolbar.realToolbar, getString(R.string.app_name), R.drawable.ic_back_arrow, this, getActivity());
         view.setMenu(R.menu.toolbar_menu);
     }
 
@@ -108,7 +95,7 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        ConceptListener mListener = null;
     }
 
 /*    private void saveOffline(Concept concept) {
@@ -118,6 +105,11 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
     @Override
     public void onNavigationClick(View view) {
         getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onMenuClick(MenuItem item) {
+
     }
 
     /**
@@ -131,7 +123,7 @@ public class ConceptFragment extends Fragment implements ToolbarListener {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface ConceptListener {
-        public void onFragmentInteraction(Uri uri);
+        void onMenuClick();
     }
 
 }

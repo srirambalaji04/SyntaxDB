@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -68,7 +69,7 @@ public class RecentsFragment extends Fragment implements ToolbarListener {
 
     private void setupToolbar() {
         ToolbarView view = new ToolbarView(
-                binding.toolbar.realToolbar, "Recents", R.drawable.ic_back_arrow, this);
+                binding.toolbar.realToolbar, "Recents", R.drawable.ic_back_arrow, this, getActivity());
         view.setMenu(R.menu.toolbar_menu);
     }
 
@@ -113,6 +114,11 @@ public class RecentsFragment extends Fragment implements ToolbarListener {
         getFragmentManager().popBackStack();
     }
 
+    @Override
+    public void onMenuClick(MenuItem item) {
+        mListener.onMenuClick();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -124,7 +130,7 @@ public class RecentsFragment extends Fragment implements ToolbarListener {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface RecentsListener {
-
+        void onMenuClick();
         void onRecentSelected(Concept concept);
     }
 }
